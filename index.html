@@ -5,11 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Origami Fractions</title>
+    <style>
+        svg {
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+            stroke-width: 1%;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Origami Fractions</h1>
-    <svg id="svgCanvas" width="500" height="500" style="border: 4px solid rgb(181, 181, 181);"></svg>
+    <svg id="svgCanvas" viewBox="0 0 700 900" preserveAspectRatio="xMidYMid meet" ;"></svg>
     <script src="CP_Creation.js"></script>
     <script src="main.js"></script>
     <script src="calculate.js"></script>
@@ -20,7 +28,6 @@
         <input id="b" type="number" min="1"><br>
         <button onclick=calculate()>Calculate</button>
     </div>
-
 </body>
 
 </html>
