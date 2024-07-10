@@ -2,19 +2,25 @@ class CP {
     #ns = 'http://www.w3.org/2000/svg';
     #square;
     #svg;
+    lineArray = [];
     constructor(size, svg) {
         this.#svg = svg;
         this.size = size;
         this.#square = this.#createCentredSquare(size);
+    }
+
+    drawCP() {
         this.#svg.appendChild(this.#square);
-        console.log("done");
+        for (const line of this.lineArray) {
+            this.#svg.appendChild(line);
+        }
     }
 
-    drawCornerDiagonal() {
-        this.#drawDiagonalInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
+    createCornerDiagonal() {
+        this.#createLineInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
     }
 
-    drawCrease(a, b, dir, type) {
+    createCrease(a, b, dir, type) {
         let colour;
         switch (dir) {
             case 'M':
@@ -27,7 +33,7 @@ class CP {
                 colour = 'grey';
                 break;
         }
-        this.#drawDiagonalInSquare(a, b, this.#square, colour, type);
+        this.#createLineInSquare(a, b, this.#square, colour, type);
     }
 
     #createCentredSquare(size) {
@@ -36,19 +42,18 @@ class CP {
         const vBoxSize = Math.min(vBox[2], vBox[3]);
         square.setAttribute('width', size);
         square.setAttribute('height', size);
-        square.setAttribute('x', (vBoxSize - size) / 2);  // Centering within the viewBox
-        square.setAttribute('y', (vBoxSize - size) / 2);  // Centering within the viewBox
+        square.setAttribute('x', (vBoxSize - size) / 2);
+        square.setAttribute('y', (vBoxSize - size) / 2);
         square.setAttribute('fill', 'none');
         square.setAttribute('stroke', 'gray');
         square.setAttribute('size', size);
         return square;
     }
 
-    #drawDiagonalInSquare(a, b, square, colour, type) {
+    #createLineInSquare(a, b, square, colour, type) {
         const line = document.createElementNS(this.#ns, 'line');
         const size = parseFloat(square.getAttribute('size'));
 
-        // Calculate relative coordinates within the viewBox
         let x1 = parseFloat(square.getAttribute('x')) + a[0] * size;
         let y1 = parseFloat(square.getAttribute('y')) + a[1] * size;
         let x2 = parseFloat(square.getAttribute('x')) + b[0] * size;
@@ -62,6 +67,6 @@ class CP {
         if (type === 'dashed') {
             line.setAttribute('stroke-dasharray', '5,5');
         }
-        this.#svg.appendChild(line);
+        this.lineArray.push(line);
     }
 }

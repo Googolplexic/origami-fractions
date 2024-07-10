@@ -17,16 +17,16 @@
 
 <body>
     <h1>Origami Fractions</h1>
-    <svg id="svgCanvas" viewBox="0 0 700 900" preserveAspectRatio="xMidYMid meet" ;"></svg>
+    <svg display="none" id="svgCanvas" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" ;"></svg>
     <script src="CP_Creation.js"></script>
     <script src="main.js"></script>
     <script src="calculate.js"></script>
     <div>
         <label for="a">Numerator:</label>
-        <input id="a" type="number" min="1"><br>
+        <input id="a" type="number" min="1" size=3><br>
         <label for="b">Denominator:</label>
-        <input id="b" type="number" min="1"><br>
-        <button onclick=calculate()>Calculate</button>
+        <input id="b" type="number" min="1" size=10><br>
+        <button onclick="calculate(document.getElementById('svgCanvas'))">Calculate</button>
     </div>
 </body>
 
