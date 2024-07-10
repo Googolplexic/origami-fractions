@@ -2,11 +2,12 @@
 class CP {
     #ns = 'http://www.w3.org/2000/svg';
     #square;
+    #div;
     constructor(size, div) {
-        this.div = div;
+        this.#div = div;
         this.size = size;
         this.#square = this.#createCentredSquare(size);
-        div.appendChild(this.#square);
+        this.#div.appendChild(this.#square);
     }
     drawCornerDiagonal() {
         this.#drawDiagonalInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
@@ -32,8 +33,8 @@ class CP {
         const square = document.createElementNS(this.#ns, 'rect');
         square.setAttribute('width', size);
         square.setAttribute('height', size);
-        square.setAttribute('x', div.getAttribute('width') / 2 - square.getAttribute('width') / 2);
-        square.setAttribute('y', div.getAttribute('height') / 2 - square.getAttribute('height') / 2);
+        square.setAttribute('x', this.#div.getAttribute('width') / 2 - square.getAttribute('width') / 2);
+        square.setAttribute('y', this.#div.getAttribute('height') / 2 - square.getAttribute('height') / 2);
         square.setAttribute('fill', 'none');
         square.setAttribute('stroke', 'gray');
         square.setAttribute('size', size);
@@ -42,8 +43,8 @@ class CP {
 
     #getCornerCoords(quadrant, square) {
 
-        const width = parseInt(div.getAttribute('width'), 10);
-        const height = parseInt(div.getAttribute('height'), 10);
+        const width = parseInt(this.#div.getAttribute('width'), 10);
+        const height = parseInt(this.#div.getAttribute('height'), 10);
 
         switch (quadrant) {
             case 1:
@@ -76,7 +77,7 @@ class CP {
         line.setAttribute('stroke', colour);
         line.setAttribute('stroke-width', 2);
         if (type == 'dashed') { line.setAttribute('stroke-dasharray', '5,5'); }
-        div.appendChild(line);
+        this.#div.appendChild(line);
 
     }
 
