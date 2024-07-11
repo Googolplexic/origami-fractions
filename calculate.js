@@ -36,7 +36,7 @@ function generateLeft(arr, left, size, svg) {
         }
         console.log("YPos: ", yPos);
         newCP.createHorizontalPinch(yPos, 'left');
-        if (oldYPos !== '1' || oldYPos !== '0') { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
+        if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
         newCP.createPoint([0, oldYPos]);
         newCP.createPoint([0, (x === '0' ? 0 : 1)]);
         arr.push(newCP);
