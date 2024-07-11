@@ -7,8 +7,18 @@ function generateCP(svg, size) {
     console.log(a, b);
     const CP_Array = [];
     CP_Array.push(new CP(size, svg));
-    let lastPoint = generateLeft(CP_Array, a, size, svg);
+    let lPoint = generateLeft(CP_Array, a, size, svg);
+    if (!(a === b)) {
+        let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
+        generateDiagonals(CP_Array, lPoint, rPoint, size, svg);
+    }
+    else {
+        let newCP = new CP(size, svg);
+        newCP.createCrease([0, lPoint], [1, lPoint], 'E');
+        CP_Array.push(newCP);
+    }
     console.log(CP_Array.length);
+    return CP_Array;
 }
 
 function generateLeft(arr, left, size, svg) {
@@ -17,16 +27,76 @@ function generateLeft(arr, left, size, svg) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
         x = left[i];
-        if (x === 0) {
+        console.log("Reading x", x);
+        if (x === '0') {
             yPos /= 2;
         }
         else {
             yPos = (1 + yPos) / 2;
         }
-        newCP.createHorizontalPinch(yPos);
-
+        console.log("YPos: ", yPos);
+        newCP.createHorizontalPinch(yPos, 'left');
+        newCP.createPoint([0, oldYPos]);
+        arr.push(newCP);
     }
+    return yPos;
 
+}
+
+function generateRight(arr, right, lPos, size, svg) {
+    let yPos = 1;
+    for (let i = 0; i < right.length; i++) {
+        let oldYPos = yPos;
+        let newCP = new CP(size, svg);
+        x = right[i];
+        console.log("Reading x", x);
+        if (x === '0') {
+            yPos /= 2;
+        }
+        else {
+            yPos = (1 + yPos) / 2;
+        }
+        console.log("YPos: ", yPos);
+        newCP.createHorizontalPinch(yPos, 'right');
+        newCP.createCrease([0, lPos], [0.2, lPos], 'E');
+        newCP.createPoint([1, oldYPos]);
+        newCP.createPoint([0, lPos]);
+        arr.push(newCP);
+    }
+    return yPos == 1 ? 0 : yPos;
+
+}
+
+function generateDiagonals(arr, lPos, rPos, size, svg) {
+    let newCP1 = new CP(size, svg);
+    newCP1.createCrease([0, lPos], [0.2, lPos], 'E');
+    newCP1.createCrease([1, rPos], [0.8, rPos], 'E');
+    newCP1.createCrease([0, lPos], [1, rPos], 'V', 'dashed');
+    newCP1.createPoint([0, lPos]);
+    newCP1.createPoint([1, rPos]);
+    arr.push(newCP1);
+
+    let newCP2 = new CP(size, svg);
+    newCP2.createCrease([0, lPos], [1, rPos], 'E');
+    newCP2.createCrease([0, 0], [1, 1], 'V', 'dashed');
+    arr.push(newCP2);
+
+    let newCP3 = new CP(size, svg);
+    newCP3.createCrease([0, lPos], [1, rPos], 'E');
+    newCP3.createCornerDiagonal();
+    newCP3.createPoint(findIntersection([[0, lPos], [1, rPos]], [[0, 0], [1, 1]]));
+    arr.push(newCP3);
+}
+
+function findIntersection(a, b) {
+    const [[x1, y1], [x2, y2]] = a;
+    const [[x3, y3], [x4, y4]] = b;
+    const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    const n_A = (x1 * y2 - y1 * x2);
+    const n_B = (x3 * y4 - y3 * x4);
+    const x = (n_A * (x3 - x4) - (x1 - x2) * n_B) / d;
+    const y = (n_A * (y3 - y4) - (y1 - y2) * n_B) / d;
+    return [x, y];
 }
 
 function simplifyFraction(n, d) {

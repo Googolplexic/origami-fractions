@@ -8,7 +8,7 @@ class CP {
         this.size = size;
         this.#square = this.#createCentredSquare(size);
     }
-    
+
     drawCP() {
         this.#svg.appendChild(this.#square);
         for (const shape of this.#shapeArray) {
@@ -19,8 +19,9 @@ class CP {
     createCornerDiagonal() {
         this.#createLineInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
     }
-    createPoint() {
-        
+    createPoint(loc) {
+        this.createCircleInSquare(loc, this.#square, '0.7%', 'black');
+
     }
     createCrease(a, b, dir, type) {
         let colour;
@@ -41,8 +42,14 @@ class CP {
         this.#createLineInSquare(a, b, this.#square, colour, type);
     }
 
-    createHorizontalPinch(y) {
-        this.createCrease([0, y], [0.1, y]);
+    createHorizontalPinch(y, side) {
+        if (side === 'left') {
+            this.createCrease([0, y], [0.2, y], 'V', 'dashed');
+        }
+        else {
+            this.createCrease([1, y], [0.8, y], 'V', 'dashed');
+        }
+
     }
 
     #createCentredSquare(size) {
@@ -74,17 +81,23 @@ class CP {
         line.setAttribute('y2', y2);
         line.setAttribute('stroke', colour);
         if (type === 'dashed') {
-            line.setAttribute('stroke-dasharray', '5,5');
+            line.setAttribute('stroke-dasharray', '2%');
         }
         this.#shapeArray.push(line);
     }
 
-    createCircleInSquare(loc, square, size) {
-        const point = document.createElementNS(this.#ns, 'circle');
+    createCircleInSquare(loc, square, radius, colour) {
+        const circle = document.createElementNS(this.#ns, 'circle');
         const size = parseFloat(square.getAttribute('size'));
 
         let x = parseFloat(square.getAttribute('x')) + loc[0] * size;
         let y = parseFloat(square.getAttribute('y')) + size - loc[1] * size;
-        }
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', radius);
+        circle.setAttribute('fill', colour);
+        circle.setAttribute('stroke', colour);
+        this.#shapeArray.push(circle);
+    }
 }
 
