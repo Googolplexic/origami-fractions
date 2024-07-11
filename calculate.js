@@ -7,7 +7,7 @@ function generateCP(svg, size) {
     console.log(a, b);
     const CP_Array = [];
     let lPoint = generateLeft(CP_Array, a, size, svg);
-    if (!(a === b) || a === '1') {
+    if (!(a === b)) {
         let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
         generateDiagonals(CP_Array, lPoint, rPoint, size, svg);
     }
@@ -21,8 +21,9 @@ function generateCP(svg, size) {
 }
 
 function generateLeft(arr, left, size, svg) {
-    if (left.length === 1) { return left; }
+
     let yPos = 1;
+    if (left === '1') { yPos = 0; }
     for (let i = 0; i < left.length; i++) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
@@ -47,6 +48,7 @@ function generateLeft(arr, left, size, svg) {
 
 function generateRight(arr, right, lPos, size, svg) {
     let yPos = 1;
+    if (right.length === 1) { yPos = 0; }
     for (let i = 0; i < right.length; i++) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
@@ -129,7 +131,7 @@ function simplifyFraction(n, d) {
 function generateBinary(a, b) {
     [a, b] = simplifyFraction(a, b);
     console.log(a, b);
-    let p = 2;
+    let p = 1;
     while (p < a || p < b - a) { p *= 2; }
     console.log(p);
     let mBin, nBin;
@@ -148,10 +150,15 @@ function generateBinary(a, b) {
     console.log(p_m, p_n);
     console.log(n);
     mBin = m.toString(2).padStart(Math.log2(p_m), '0');
+    if (p_m === 1) { mBin = ""; }
     if (mBin.length > 1) {
         mBin = mBin.slice(0, -1) + '0';
     }
     nBin = n !== 0 ? n.toString(2).padStart(Math.log2(p_n), '0') : "";
+    if (a / b === 0.5) {
+        nBin = '0';
+        mBin = '0';
+    }
     if (nBin.length > 1) {
         nBin = nBin.slice(0, -1) + '0';
     }

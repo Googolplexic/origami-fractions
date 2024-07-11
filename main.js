@@ -11,12 +11,7 @@ function calculate(svg, previous, next, event) {
     next.style.display = "inline-block";
     var vBox = svg.getAttribute('viewBox').split(' ').map(Number);
     const size = Math.min(vBox[2], vBox[3]) * 0.9;
-    // fractCP = new CP(size, svg);
-    // fractCP.createCornerDiagonal();
-    // fractCP.createCrease([0, 1 / 3], [0.3, 0.8], 'M', 'Solid');
-    // fractCP.createHorizontalPinch(0.5);
-    // fractCP.createPoint([0.2, 0.98]);
-    // fractCP.drawCP();
+
     CP_array = generateCP(svg, size);
     map.set(svg.id, CP_array);
     svg.innerHTML = "";
