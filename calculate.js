@@ -7,7 +7,7 @@ function generateCP(svg, size) {
     console.log(a, b);
     const CP_Array = [];
     let lPoint = generateLeft(CP_Array, a, size, svg);
-    if (!(a === b)) {
+    if (!(a === b) || a === '1') {
         let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
         generateDiagonals(CP_Array, lPoint, rPoint, size, svg);
     }
@@ -36,7 +36,7 @@ function generateLeft(arr, left, size, svg) {
         }
         console.log("YPos: ", yPos);
         newCP.createHorizontalPinch(yPos, 'left');
-        newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
+        if (oldYPos !== '1' || oldYPos !== '0') { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
         newCP.createPoint([0, oldYPos]);
         newCP.createPoint([0, (x === '0' ? 0 : 1)]);
         arr.push(newCP);
@@ -61,7 +61,7 @@ function generateRight(arr, right, lPos, size, svg) {
         console.log("YPos: ", yPos);
         newCP.createHorizontalPinch(yPos, 'right');
         newCP.createCrease([0, lPos], [0.2, lPos], 'E');
-        newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E');
+        if (oldYPos !== '1' || oldYPos !== '0') { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
         newCP.createPoint([1, oldYPos]);
         newCP.createPoint([0, lPos]);
         newCP.createPoint([1, (x === '0' ? 0 : 1)]);
@@ -73,8 +73,8 @@ function generateRight(arr, right, lPos, size, svg) {
 
 function generateDiagonals(arr, lPos, rPos, size, svg) {
     let newCP1 = new CP(size, svg);
-    newCP1.createCrease([0, lPos], [0.2, lPos], 'E');
-    newCP1.createCrease([1, rPos], [0.8, rPos], 'E');
+    if (lPos !== '1') { newCP1.createCrease([0, lPos], [0.2, lPos], 'E'); }
+    if (rPos !== '0') { newCP1.createCrease([1, rPos], [0.8, rPos], 'E'); };
     newCP1.createCrease([0, lPos], [1, rPos], 'V', 'dashed');
     newCP1.createPoint([0, lPos]);
     newCP1.createPoint([1, rPos]);
