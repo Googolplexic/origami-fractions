@@ -124,7 +124,7 @@ function simplifyFraction(n, d) {
     if (simplified === true) {
         notice.textContent = "Fraction simplified to " + n + "/" + d;
     }
-    else notice.textContent - "";
+    else { notice.textContent = ""; }
     return [n, d];
 }
 
