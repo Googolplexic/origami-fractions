@@ -1,6 +1,5 @@
 import math
 
-
 def simplifyFraction(n, d):
     for i in range(n, 1, -1):
         if d % i == 0 and n % i == 0:
