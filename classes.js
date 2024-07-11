@@ -79,6 +79,12 @@ class CP {
         this.#shapeArray.push(line);
     }
 
-    
+    createCircleInSquare(loc, square, size) {
+        const point = document.createElementNS(this.#ns, 'circle');
+        const size = parseFloat(square.getAttribute('size'));
+
+        let x = parseFloat(square.getAttribute('x')) + loc[0] * size;
+        let y = parseFloat(square.getAttribute('y')) + size - loc[1] * size;
+        }
 }
 
