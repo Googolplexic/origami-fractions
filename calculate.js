@@ -99,19 +99,27 @@ function findIntersection(a, b) {
     return [x, y];
 }
 
+function findGCD(a, b) {
+    while (b !== 0) {
+        let temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
 function simplifyFraction(n, d) {
     let simplified = false;
-    for (let i = n; i > 1; i--) {
-        if (d % i == 0 && n % i == 0) {
-            n = Math.floor(n / i);
-            d = Math.floor(d / i);
-            simplified = true;
-        }
+    let gcd = findGCD(n, d);
+    if (gcd !== 1) {
+        simplified = true;
+        n /= gcd;
+        d /= gcd;
     }
     if (simplified === true) {
         notice = document.getElementById('notice');
         notice.textContent = "Fraction simplified to " + n + "/" + d;
     }
+    else notice.textContent - "";
     return [n, d];
 }
 
