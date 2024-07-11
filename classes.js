@@ -10,7 +10,6 @@ class CP {
     }
 
     drawCP() {
-        this.#svg.appendChild(this.#square);
         for (const shape of this.#shapeArray) {
             this.#svg.appendChild(shape);
         }
