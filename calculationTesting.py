@@ -18,7 +18,7 @@ a, b = simplifyFraction(a, b)
 if not (tempA == a and tempB == b):
     print(f"Fraction simplified to {a}/{b}")
 
-p = 1
+p = 2
 while p < a or p < b - a:
     p *= 2
 mBin = ""

@@ -2,24 +2,26 @@ class CP {
     #ns = 'http://www.w3.org/2000/svg';
     #square;
     #svg;
-    lineArray = [];
+    #shapeArray = [];
     constructor(size, svg) {
         this.#svg = svg;
         this.size = size;
         this.#square = this.#createCentredSquare(size);
     }
-
+    
     drawCP() {
         this.#svg.appendChild(this.#square);
-        for (const line of this.lineArray) {
-            this.#svg.appendChild(line);
+        for (const shape of this.#shapeArray) {
+            this.#svg.appendChild(shape);
         }
     }
 
     createCornerDiagonal() {
         this.#createLineInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
     }
-
+    createPoint() {
+        
+    }
     createCrease(a, b, dir, type) {
         let colour;
         switch (dir) {
@@ -32,8 +34,15 @@ class CP {
             case 'E':
                 colour = 'grey';
                 break;
+            default:
+                colour = 'grey';
+                break;
         }
         this.#createLineInSquare(a, b, this.#square, colour, type);
+    }
+
+    createHorizontalPinch(y) {
+        this.createCrease([0, y], [0.1, y]);
     }
 
     #createCentredSquare(size) {
@@ -55,9 +64,9 @@ class CP {
         const size = parseFloat(square.getAttribute('size'));
 
         let x1 = parseFloat(square.getAttribute('x')) + a[0] * size;
-        let y1 = parseFloat(square.getAttribute('y')) + a[1] * size;
+        let y1 = parseFloat(square.getAttribute('y')) + size - a[1] * size;
         let x2 = parseFloat(square.getAttribute('x')) + b[0] * size;
-        let y2 = parseFloat(square.getAttribute('y')) + b[1] * size;
+        let y2 = parseFloat(square.getAttribute('y')) + size - b[1] * size;
 
         line.setAttribute('x1', x1);
         line.setAttribute('y1', y1);
@@ -67,6 +76,9 @@ class CP {
         if (type === 'dashed') {
             line.setAttribute('stroke-dasharray', '5,5');
         }
-        this.lineArray.push(line);
+        this.#shapeArray.push(line);
     }
+
+    
 }
+
