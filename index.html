@@ -18,19 +18,18 @@
 <body>
     <h1>Origami Fractions</h1>
     <div>
-        <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" array=[]
-            index=-1></svg>
+        <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" index=-1></svg>
     </div>
     <div>
         <button style="display:none" id="previous"
             onclick="previous(document.getElementById('svgCanvas'))">Previous</button>
         <button style="display:none" id="next" onclick="next(document.getElementById('svgCanvas'))">Next</button>
     </div>
-    <script src=" classes.js"></script>
-    <script src="main.js"></script>
-    <script src="calculate.js"></script>
+    <script src="creasePatternClass.js"></script>
+    <script src="svgTools.js"></script>
+    <script src="crossingDiagonals.js"></script>
     <form id="inputForm"
-        onsubmit="calculate(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
+        onsubmit="updateSVG(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
         <div>
             <label for="a">Numerator:</label>
             <input id="a" type="number" min="1" required><br>

@@ -1,6 +1,6 @@
 const map = new Map();
 
-function calculate(svg, previous, next, event) {
+function updateSVG(svg, previous, next, event) {
     event.preventDefault();
     if (parseInt(document.getElementById('a').value) >= parseInt(document.getElementById('b').value)) {
         alert("Numerator must be less than the denominator");
