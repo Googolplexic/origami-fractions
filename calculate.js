@@ -131,6 +131,9 @@ function simplifyFraction(n, d) {
 function generateBinary(a, b) {
     [a, b] = simplifyFraction(a, b);
     console.log(a, b);
+    if (a / b === 0.5) {
+        return ['0', '0'];
+    }
     let p = 1;
     while (p < a || p < b - a) { p *= 2; }
     console.log(p);
@@ -149,16 +152,12 @@ function generateBinary(a, b) {
     }
     console.log(p_m, p_n);
     console.log(n);
-    mBin = m.toString(2).padStart(Math.log2(p_m), '0');
-    if (p_m === 1) { mBin = ""; }
+    mBin = p_m !== 1 ? m.toString(2).padStart(Math.log2(p_m), '0') : "";
     if (mBin.length > 1) {
         mBin = mBin.slice(0, -1) + '0';
     }
     nBin = n !== 0 ? n.toString(2).padStart(Math.log2(p_n), '0') : "";
-    if (a / b === 0.5) {
-        nBin = '0';
-        mBin = '0';
-    }
+
     if (nBin.length > 1) {
         nBin = nBin.slice(0, -1) + '0';
     }
