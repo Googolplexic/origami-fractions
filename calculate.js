@@ -115,8 +115,8 @@ function simplifyFraction(n, d) {
         n /= gcd;
         d /= gcd;
     }
+    notice = document.getElementById('notice');
     if (simplified === true) {
-        notice = document.getElementById('notice');
         notice.textContent = "Fraction simplified to " + n + "/" + d;
     }
     else notice.textContent - "";
