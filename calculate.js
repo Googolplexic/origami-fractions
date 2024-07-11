@@ -22,6 +22,7 @@ function generateCP(svg, size) {
 }
 
 function generateLeft(arr, left, size, svg) {
+    if (left.length === 1) { return left; }
     let yPos = 1;
     for (let i = 0; i < left.length; i++) {
         let oldYPos = yPos;
@@ -36,7 +37,9 @@ function generateLeft(arr, left, size, svg) {
         }
         console.log("YPos: ", yPos);
         newCP.createHorizontalPinch(yPos, 'left');
+        newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
         newCP.createPoint([0, oldYPos]);
+        newCP.createPoint([0, (x === '0' ? 0 : 1)]);
         arr.push(newCP);
     }
     return yPos;
@@ -59,8 +62,10 @@ function generateRight(arr, right, lPos, size, svg) {
         console.log("YPos: ", yPos);
         newCP.createHorizontalPinch(yPos, 'right');
         newCP.createCrease([0, lPos], [0.2, lPos], 'E');
+        newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E');
         newCP.createPoint([1, oldYPos]);
         newCP.createPoint([0, lPos]);
+        newCP.createPoint([1, (x === '0' ? 0 : 1)]);
         arr.push(newCP);
     }
     return yPos == 1 ? 0 : yPos;
@@ -144,8 +149,14 @@ function generateBinary(a, b) {
     }
     console.log(p_m, p_n);
     console.log(n);
-    mBin = m.toString(2).padStart(Math.log2(p_m), '0').slice(0, -1) + '0';
-    nBin = n !== 0 ? n.toString(2).padStart(Math.log2(p_n), '0').slice(0, -1) + '0' : "";
+    mBin = m.toString(2).padStart(Math.log2(p_m), '0');
+    if (mBin.length > 1) {
+        mBin = mBin.slice(0, -1) + '0';
+    }
+    nBin = n !== 0 ? n.toString(2).padStart(Math.log2(p_n), '0') : "";
+    if (nBin.length > 1) {
+        nBin = nBin.slice(0, -1) + '0';
+    }
     console.log("m:", m, p_m, mBin);
     console.log("n:", n, p_n, nBin);
     return [mBin, nBin];
