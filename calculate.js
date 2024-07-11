@@ -63,7 +63,6 @@ function generateRight(arr, right, lPos, size, svg) {
         if (lPos !== 1) { newCP.createCrease([0, lPos], [0.2, lPos], 'E'); };
         if (oldYPos !== 1) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
         newCP.createPoint([1, oldYPos]);
-        newCP.createPoint([0, lPos]);
         newCP.createPoint([1, (x === '0' ? 0 : 1)]);
         arr.push(newCP);
     }
