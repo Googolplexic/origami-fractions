@@ -1,8 +1,9 @@
 # origami-fractions
-Application that generates a series of steps that subdivides a square into the inputted fraction
+An application that generates a series of steps that subdivides a square into the inputted fraction
 
-[Demo site](https://googolplexic.github.io/origami-fractions/)
+# [Demo site](https://googolplexic.github.io/origami-fractions/)
 
 Current state: Working barebones model done
-Current goal(s): Making it look nicer, adding comments and cleaning it up
+Current goal(s): Making it look nicer, adding comments/documentation, and cleaning it up
+
 Future goal(s): adding different methods
