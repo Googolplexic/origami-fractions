@@ -6,7 +6,6 @@ function generateCP(svg, size) {
     b = b.split('').reverse().join('');
     console.log(a, b);
     const CP_Array = [];
-    CP_Array.push(new CP(size, svg));
     let lPoint = generateLeft(CP_Array, a, size, svg);
     if (!(a === b)) {
         let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
