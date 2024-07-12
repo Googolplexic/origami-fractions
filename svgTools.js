@@ -1,19 +1,27 @@
 const map = new Map();
 
-function updateSVG(svg, previous, next, event) {
+function setupSVG(svg, previous, next, event) {
     event.preventDefault();
     let a = parseInt(document.getElementById('a').value);
     let b = parseInt(document.getElementById('b').value);
     if (a >= b) {
         alert("Numerator must be less than the denominator");
-        return;
+        return [0, 0, 0];
     }
     svg.setAttribute('display', 'block');
     previous.style.display = "inline-block";
     next.style.display = "inline-block";
     var vBox = svg.getAttribute('viewBox').split(' ').map(Number);
     const size = Math.min(vBox[2], vBox[3]) * 0.9;
-    CP_array = crossingDiagonals(svg, size, a, b);
+    return [a, b, size];
+}
+
+function crossingDiagonals(svg, previous, next, event) {
+    event.preventDefault();
+    const [a, b, size] = setupSVG(svg, previous, next, event);
+    if (a === 0) { return; }
+    console.log("sdf");
+    CP_array = generateCrossingDiagonals(svg, size, a, b);
     map.set(svg.id, CP_array);
     svg.innerHTML = "";
     CP_array[0].drawCP();

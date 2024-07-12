@@ -1,4 +1,4 @@
-function crossingDiagonals(svg, size, a, b) {
+function generateCrossingDiagonals(svg, size, a, b) {
     [a, b] = generateBinary(a, b);
     a = a.split('').reverse().join('');
     b = b.split('').reverse().join('');
@@ -19,7 +19,6 @@ function crossingDiagonals(svg, size, a, b) {
 }
 
 function generateLeft(arr, left, size, svg) {
-
     let yPos = 1;
     if (left === '1') { yPos = 0; }
     for (let i = 0; i < left.length; i++) {
@@ -110,6 +109,7 @@ function findGCD(a, b) {
     }
     return a;
 }
+
 function simplifyFraction(n, d) {
     let simplified = false;
     let gcd = findGCD(n, d);
@@ -140,14 +140,12 @@ function generateBinary(a, b) {
     let n = p + a - b;
     let p_m = p;
     let p_n = n === 0 ? 1 : p;
-    while (m % 2 === 0 && m > 0) {
-        m = Math.floor(m / 2);
-        p_m = Math.floor(p_m / 2);
-    }
-    while (n % 2 === 0 && n > 0) {
-        n = Math.floor(n / 2);
-        p_n = Math.floor(p_n / 2);
-    }
+    let mGCD = findGCD(m, p_m);
+    m /= mGCD;
+    p_m /= mGCD;
+    let nGCD = findGCD(n, p_n);
+    n /= nGCD;
+    p_n /= nGCD;
     console.log(p_m, p_n);
     console.log(n);
     mBin = p_m !== 1 ? m.toString(2).padStart(Math.log2(p_m), '0') : "";

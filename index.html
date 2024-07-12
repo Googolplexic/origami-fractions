@@ -28,7 +28,7 @@
     <script src="svgTools.js"></script>
     <script src="crossingDiagonals.js"></script>
     <form id="inputForm"
-        onsubmit="updateSVG(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
+        onsubmit="crossingDiagonals(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
         <div>
             <label for="a">Numerator:</label>
             <input id="a" type="number" min="1" required><br>
