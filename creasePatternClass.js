@@ -21,7 +21,7 @@ class CP {
         this.#createLineInSquare([0, 0], [1, 1], this.#square, 'grey', 'solid');
     }
     createPoint(loc) {
-        this.createCircleInSquare(loc, this.#square, '0.7%', 'black');
+        this.#createCircleInSquare(loc, this.#square, '0.7%', 'black');
 
     }
     createCrease(a, b, dir, type) {
@@ -98,7 +98,7 @@ class CP {
         this.#shapeArray.push(line);
     }
 
-    createCircleInSquare(loc, square, radius, colour) {
+    #createCircleInSquare(loc, square, radius, colour) {
         const circle = document.createElementNS(this.#ns, 'circle');
         const size = parseFloat(square.getAttribute('size'));
 

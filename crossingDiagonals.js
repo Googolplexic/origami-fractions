@@ -1,6 +1,4 @@
-function generateCP(svg, size) {
-    let a = parseInt(document.getElementById('a').value);
-    let b = parseInt(document.getElementById('b').value);
+function crossingDiagonals(svg, size, a, b) {
     [a, b] = generateBinary(a, b);
     a = a.split('').reverse().join('');
     b = b.split('').reverse().join('');
