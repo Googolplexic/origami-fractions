@@ -6,38 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Origami Fractions</title>
     <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .svgDisplay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            display: block;
+        }
+
         svg {
             width: 100%;
             height: auto;
             max-width: 400px;
             stroke-width: 1%;
         }
+
+        .fraction-input form {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            margin: auto;
+        }
+
+        .fraction-input label {
+            margin-bottom: 5px;
+        }
+
+        .fraction-input input,
+        .fraction-input button {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .fraction-input button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+            }
+
+        }
     </style>
 </head>
 
 <body>
     <h1>Origami Fractions</h1>
-    <div>
-        <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" index=-1></svg>
-    </div>
-    <div>
-        <button style="display:none" id="previous">Previous</button>
-        <button style="display:none" id="next">Next</button>
-    </div>
     <script src="creasePatternClass.js"></script>
     <script src="svgTools.js"></script>
     <script src="crossingDiagonals.js"></script>
-    <form id="inputForm"
-        onsubmit="crossingDiagonals(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
-        <div>
-            <label for="a">Numerator:</label>
-            <input id="a" type="number" min="1" required><br>
-            <label for="b">Denominator:</label>
-            <input id="b" type="number" min="1" required><br>
-            <button type="submit">Calculate</button>
+    <div class="container">
+        <div class="svgDisplay">
+            <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" index=-1></svg>
+            <div class="button-container">
+                <button style="display:none" id="previous">Previous</button>
+                <button style="display:none" id="next">Next</button>
+            </div>
+
         </div>
-    </form>
-    <p id=notice></p>
+        <div style="height: 20px;"></div>
+        <div class=fraction-input>
+            <form id="inputForm"
+                onsubmit="crossingDiagonals(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
+
+                <input id="a" type="number" min="1" required><br>
+                <input id="b" type="number" min="1" required><br>
+                <button type="submit">Calculate</button>
+
+            </form>
+        </div>
+        <p id=notice></p>
+    </div>
 </body>
 
 </html>
