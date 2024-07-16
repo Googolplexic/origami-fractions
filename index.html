@@ -6,12 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Origami Fractions</title>
     <style>
+        h1 {
+            color: #616161;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         .container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            /* height: 100vh; */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             background-color: #f0f0f0;
+            width: 100%;
+        }
+
+        .interface {
+            display: flex;
+            flex-direction: row;
         }
 
         .svgDisplay {
@@ -28,7 +43,7 @@
             margin-top: 10px;
         }
 
-        button {
+        .svgDisplay button {
             flex: 1;
             margin: 0 5px;
             padding: 10px;
@@ -40,70 +55,97 @@
             height: auto;
             max-width: 400px;
             stroke-width: 1%;
+
+        }
+
+        .fraction-input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            width: 12vw;
         }
 
         .fraction-input form {
             display: flex;
             flex-direction: column;
-            width: 80%;
+            align-items: center;
             margin: auto;
+
         }
 
-        .fraction-input label {
-            margin-bottom: 5px;
+        .fraction-input input {
+            width: 50%;
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .fraction-input input,
         .fraction-input button {
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-        }
-
-        .fraction-input button {
+            width: fit-content;
             background-color: #007bff;
             color: white;
-            border: none;
             cursor: pointer;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (max-width: 600px) {
-            .container {
+        .fraction-input .line {
+            border-top: 4px solid #535353;
+            width: 100%;
+        }
+
+
+        @media (max-width: 800px) {
+            .interface {
                 flex-direction: column;
             }
 
+            .fraction-input {
+                width: 40%;
+            }
+
+            .svgDisplay {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Origami Fractions</h1>
+    <div class="container">
+        <h1>Origami Fractions</h1>
+        <div class="interface">
+            <div class="svgDisplay">
+                <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+                    index="-1"></svg>
+                <div class="button-container">
+                    <button style="display:none" id="previous">Previous</button>
+                    <button style="display:none" id="next">Next</button>
+                </div>
+            </div>
+            <div class="fraction-input">
+                <form id="inputForm"
+                    onsubmit="crossingDiagonals(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
+                    <input id="a" type="number" placeholder="1" min="1" required>
+                    <div class="line"></div>
+                    <input id="b" type="number" placeholder="5" min="1" required><br>
+                    <button type="submit">Calculate</button>
+                </form>
+            </div>
+            <p id="notice"></p>
+        </div>
+    </div>
     <script src="creasePatternClass.js"></script>
     <script src="svgTools.js"></script>
     <script src="crossingDiagonals.js"></script>
-    <div class="container">
-        <div class="svgDisplay">
-            <svg display="none" id="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" index=-1></svg>
-            <div class="button-container">
-                <button style="display:none" id="previous">Previous</button>
-                <button style="display:none" id="next">Next</button>
-            </div>
-
-        </div>
-        <div style="height: 20px;"></div>
-        <div class=fraction-input>
-            <form id="inputForm"
-                onsubmit="crossingDiagonals(document.getElementById('svgCanvas'), document.getElementById('previous'), document.getElementById('next'),event)">
-
-                <input id="a" type="number" min="1" required><br>
-                <input id="b" type="number" min="1" required><br>
-                <button type="submit">Calculate</button>
-
-            </form>
-        </div>
-        <p id=notice></p>
-    </div>
 </body>
 
 </html>
