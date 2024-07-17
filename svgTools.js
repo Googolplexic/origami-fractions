@@ -1,6 +1,6 @@
 const map = new Map();
 
-function setupSVG(svg, previous, next, event) {
+function setupSVG(svgDiv, event) {
     event.preventDefault();
     let a = parseInt(document.getElementById('a').value);
     let b = parseInt(document.getElementById('b').value);
@@ -8,19 +8,24 @@ function setupSVG(svg, previous, next, event) {
         alert("Numerator must be less than the denominator");
         return [0, 0, 0];
     }
+    let previous = svgDiv.getElementsByClassName('previous')[0];
+    let next = svgDiv.getElementsByClassName('next')[0];
+    let svg = svgDiv.getElementsByClassName('svgCanvas')[0];
+    let notice = svgDiv.getElementsByClassName('notice')[0];
     svg.setAttribute('display', 'block');
     previous.style.display = "inline-block";
     next.style.display = "inline-block";
     var vBox = svg.getAttribute('viewBox').split(' ').map(Number);
     const size = Math.min(vBox[2], vBox[3]) * 0.9;
-    return [a, b, size];
+    return [svg, a, b, previous, next, size, notice];
 }
 
-function crossingDiagonals(svg, previous, next, event) {
+function crossingDiagonals(svgDiv, event) {
+    console.log(svgDiv);
     event.preventDefault();
-    const [a, b, size] = setupSVG(svg, previous, next, event);
+    const [svg, a, b, previous, next, size, notice] = setupSVG(svgDiv, event);
     if (a === 0) { return; }
-    CP_array = generateCrossingDiagonals(svg, size, a, b);
+    CP_array = generateCrossingDiagonals(svg, size, a, b, notice);
     map.set(svg.id, CP_array);
     svg.innerHTML = "";
     CP_array[0].drawCP();

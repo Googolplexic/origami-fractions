@@ -1,5 +1,5 @@
-function generateCrossingDiagonals(svg, size, a, b) {
-    [a, b] = generateBinary(a, b);
+function generateCrossingDiagonals(svg, size, a, b, notice) {
+    [a, b] = generateBinary(a, b, notice);
     a = a.split('').reverse().join('');
     b = b.split('').reverse().join('');
     console.log(a, b);
@@ -110,7 +110,7 @@ function findGCD(a, b) {
     return a;
 }
 
-function simplifyFraction(n, d) {
+function simplifyFraction(n, d, notice) {
     let simplified = false;
     let gcd = findGCD(n, d);
     if (gcd !== 1) {
@@ -118,16 +118,16 @@ function simplifyFraction(n, d) {
         n /= gcd;
         d /= gcd;
     }
-    notice = document.getElementById('notice');
     if (simplified === true) {
         notice.textContent = "Fraction simplified to " + n + "/" + d;
+        notice.style.display = 'block';
     }
-    else { notice.textContent = ""; }
+    else { notice.textContent = ""; notice.style.display = 'none'; }
     return [n, d];
 }
 
-function generateBinary(a, b) {
-    [a, b] = simplifyFraction(a, b);
+function generateBinary(a, b, notice) {
+    [a, b] = simplifyFraction(a, b, notice);
     console.log(a, b);
     if (a / b === 0.5) {
         return ['0', '0'];
