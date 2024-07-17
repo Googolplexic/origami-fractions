@@ -13,10 +13,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 50%; */
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    margin: 0 auto;
     width: 100%;
 }
 
@@ -58,10 +55,12 @@ body {
 
 }
 
-.svgDisplay p {
+.fraction-input p {
     display: none;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: smaller;
     color: #616161;
+    margin: 0px;
 }
 
 .fraction-input {
@@ -115,22 +114,17 @@ input::-webkit-inner-spin-button {
     width: 100%;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+
+}
 
 @media (max-width: 800px) {
-    h1 {
-        padding-top: 10%;
-    }
-
     .interface {
         flex-direction: column;
         column-gap: 0px;
-    }
-
-    .fraction-input {
-        /* width: 40%; */
-    }
-
-    .svgDisplay {
-        /* margin-bottom: 20px; */
     }
 }

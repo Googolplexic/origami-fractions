@@ -61,7 +61,9 @@ class CP {
         const order = {
             'line': 1,
             'rect': 2,
-            'circle': 3
+            'circle': 3,
+            'path': 4,
+            'marker': 5
         };
         let orderA = order[a.tagName] || Infinity;
         let orderB = order[b.tagName] || Infinity;
@@ -145,11 +147,7 @@ class CP {
 
         marker.appendChild(arrowhead);
 
-
-        const defs = document.createElementNS(this.#ns, 'defs');
-        defs.appendChild(marker);
-
-        this.#shapeArray.push(defs);
+        this.#shapeArray.push(marker);
         let x = dir === 0 ? (parseFloat(square.getAttribute('x')) + (size * 0.05)) : (parseFloat(square.getAttribute('x')) + (size * 0.95));
         let q = x + ((dir === 0) ? size * 0.2 : -size * 0.2);
         const path = document.createElementNS(this.#ns, 'path');

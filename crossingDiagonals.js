@@ -5,7 +5,7 @@ function generateCrossingDiagonals(svg, size, a, b, notice) {
     console.log(a, b);
     const CP_Array = [];
     let lPoint = generateLeft(CP_Array, a, size, svg);
-    if (!(a === b)) {
+    if (a !== b) {
         let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
         generateDiagonals(CP_Array, lPoint, rPoint, size, svg);
     }

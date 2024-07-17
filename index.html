@@ -18,7 +18,7 @@
                     <button style="display:none" class="previous">Previous</button>
                     <button style="display:none" class="next">Next</button>
                 </div>
-                <p class="notice"></p>
+
             </div>
             <div class="fraction-input">
                 <form id="inputForm" onsubmit="crossingDiagonals(document.getElementById('display'),event)">
@@ -26,6 +26,7 @@
                     <div class="line"></div>
                     <input id="b" type="number" placeholder="Denominator" min="1" required>
                     <button type="submit">Calculate</button>
+                    <p id="notice"></p>
                 </form>
             </div>
         </div>

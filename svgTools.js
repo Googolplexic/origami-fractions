@@ -11,7 +11,7 @@ function setupSVG(svgDiv, event) {
     let previous = svgDiv.getElementsByClassName('previous')[0];
     let next = svgDiv.getElementsByClassName('next')[0];
     let svg = svgDiv.getElementsByClassName('svgCanvas')[0];
-    let notice = svgDiv.getElementsByClassName('notice')[0];
+    let notice = document.getElementById('notice');
     svg.setAttribute('display', 'block');
     previous.style.display = "inline-block";
     next.style.display = "inline-block";
