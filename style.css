@@ -60,6 +60,8 @@ body {
 
 .svgDisplay p {
     display: none;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #616161;
 }
 
 .fraction-input {

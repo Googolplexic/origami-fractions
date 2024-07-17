@@ -37,6 +37,7 @@ function generateLeft(arr, left, size, svg) {
         if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
         newCP.createPoint([0, oldYPos]);
         newCP.createPoint([0, (x === '0' ? 0 : 1)]);
+        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 0);
         arr.push(newCP);
     }
     return yPos;
@@ -63,6 +64,7 @@ function generateRight(arr, right, lPos, size, svg) {
         if (oldYPos !== 1) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
         newCP.createPoint([1, oldYPos]);
         newCP.createPoint([1, (x === '0' ? 0 : 1)]);
+        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 1);
         arr.push(newCP);
     }
     return yPos == 1 ? 0 : yPos;
