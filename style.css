@@ -1,11 +1,16 @@
-h1 {
-    color: #616161;
+.header {
     font-family: Arial, Helvetica, sans-serif;
+    color: #4b4b4b;
+    margin: 0px;
     text-align: center;
 }
 
 body {
     background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
 
 }
 
@@ -131,14 +136,6 @@ input {
 .fraction-input .line {
     border-top: 4px solid #535353;
     width: 100%;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
-
 }
 
 @media (max-width: 800px) {
