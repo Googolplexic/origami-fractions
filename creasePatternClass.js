@@ -43,18 +43,64 @@ class CP {
         this.#createLineInSquare(a, b, this.#square, colour, type);
     }
 
-    createHorizontalPinch(y, side) {
+    createHorizontalPinch(y, side, length) {
         if (side === 'left') {
-            this.createCrease([0, y], [0.2, y], 'V', 'dashed');
+            this.createCrease([0, y], [length, y], 'V', 'dashed');
         }
         else {
-            this.createCrease([1, y], [0.8, y], 'V', 'dashed');
+            this.createCrease([1, y], [1 - length, y], 'V', 'dashed');
         }
 
     }
 
-    createArrow(a, b, dir) {
-        this.#createVerticalCurvedArrow(a, b, this.#square, dir);
+    createVerticalArrow(y1, y2, curveDir) {
+        if (curveDir === 'L') {
+            if (y2 > y1) {
+                this.#createVerticalCurvedArrow([0, y1], [0, y2], this.#square, [0.05, 0.05], [0.05, -0.05], 'L');
+            }
+            else {
+                this.#createVerticalCurvedArrow([0, y1], [0, y2], this.#square, [0.05, -0.05], [0.05, 0.05], 'L');
+            }
+        }
+        else {
+            if (y2 > y1) {
+                this.#createVerticalCurvedArrow([1, y1], [1, y2], this.#square, [-0.05, 0.05], [-0.05, -0.05], 'R');
+            }
+            else {
+                this.#createVerticalCurvedArrow([1, y1], [1, y2], this.#square, [-0.05, -0.05], [-0.05, 0.05], 'R');
+            }
+
+        }
+    }
+
+
+    createArrow(a, b, aOffset, bOffset, dir) {
+        this.#createVerticalCurvedArrow(a, b, this.#square, aOffset, bOffset, dir);
+    }
+    distance(a, b) {
+        return this.#distanceInSquare(this.#square, this.#squareSize(this.#square), a, b);
+    }
+
+    #squareSize(square) {
+        return parseFloat(square.getAttribute('size'));
+    }
+    #findY(square, size, y) {
+        return parseFloat(square.getAttribute('y')) + size - y * size;
+    }
+
+    #findX(square, size, x) {
+        return parseFloat(square.getAttribute('y')) + x * size;
+    }
+
+    #distanceInSquare(square, size, a, b) {
+
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
+
+        return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
     }
 
     #sort(a, b) {
@@ -87,12 +133,12 @@ class CP {
 
     #createLineInSquare(a, b, square, colour, type) {
         const line = document.createElementNS(this.#ns, 'line');
-        const size = parseFloat(square.getAttribute('size'));
+        const size = this.#squareSize(this.#square);
 
-        let x1 = parseFloat(square.getAttribute('x')) + a[0] * size;
-        let y1 = parseFloat(square.getAttribute('y')) + size - a[1] * size;
-        let x2 = parseFloat(square.getAttribute('x')) + b[0] * size;
-        let y2 = parseFloat(square.getAttribute('y')) + size - b[1] * size;
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
 
         line.setAttribute('x1', x1);
         line.setAttribute('y1', y1);
@@ -107,10 +153,10 @@ class CP {
 
     #createCircleInSquare(loc, square, radius, colour) {
         const circle = document.createElementNS(this.#ns, 'circle');
-        const size = parseFloat(square.getAttribute('size'));
+        const size = this.#squareSize(this.#square);
 
-        let x = parseFloat(square.getAttribute('x')) + loc[0] * size;
-        let y = parseFloat(square.getAttribute('y')) + size - loc[1] * size;
+        let x = this.#findX(square, size, loc[0]);
+        let y = this.#findY(square, size, loc[1]);
         circle.setAttribute('cx', x);
         circle.setAttribute('cy', y);
         circle.setAttribute('r', radius);
@@ -119,19 +165,17 @@ class CP {
         this.#shapeArray.push(circle);
     }
 
-    #createVerticalCurvedArrow(a, b, square, dir) {
-        const size = parseFloat(square.getAttribute('size'));
-
-        let y1 = parseFloat(square.getAttribute('y')) + size - a * size;
-        let y2 = parseFloat(square.getAttribute('y')) + size - b * size;
-        if (a !== 0) {
-            y1 += size * 0.05;
-            y2 -= size * 0.05;
-        }
-        else {
-            y1 -= size * 0.05;
-            y2 += size * 0.05;
-        }
+    #createVerticalCurvedArrow(a, b, square, aOffset, bOffset, dir) {
+        const size = this.#squareSize(this.#square);
+    
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
+        x1 += size * aOffset[0];
+        y1 -= size * aOffset[1];
+        x2 += size * bOffset[0];
+        y2 -= size * bOffset[1];
 
         const marker = document.createElementNS(this.#ns, 'marker');
         marker.setAttribute('id', 'arrowhead');
@@ -148,16 +192,26 @@ class CP {
         marker.appendChild(arrowhead);
 
         this.#shapeArray.push(marker);
-        let x = dir === 0 ? (parseFloat(square.getAttribute('x')) + (size * 0.05)) : (parseFloat(square.getAttribute('x')) + (size * 0.95));
-        let q = x + ((dir === 0) ? size * 0.2 : -size * 0.2);
+        const distance = this.distance(a, b);
+        const slope = -(b[0] - a[0]) / (b[1] - a[1]);
+        let xq, yq;
+
+        if (slope > 0) {
+            xq = (x1 + x2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
+            yq = (y1 + y2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
+        }
+        else {
+            xq = (x1 + x2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
+            yq = (y1 + y2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
+        }
         const path = document.createElementNS(this.#ns, 'path');
-        const pathdata = `M ${x} ${y1} Q ${q} ${(y1 + y2) / 2}, ${x} ${y2}`;
+        const pathdata = `M ${x1} ${y1} Q ${xq} ${yq}, ${x2} ${y2}`;
         path.setAttribute('d', pathdata);
         path.setAttribute('stroke', '#444444');
         path.setAttribute('stroke-width', '0.8%');
         path.setAttribute('fill', 'none');
         path.setAttribute('marker-end', 'url(#arrowhead)');
-        console.log(path);
+
 
         this.#shapeArray.push(path);
 

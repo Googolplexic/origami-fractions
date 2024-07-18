@@ -15,17 +15,8 @@
         </div>
 
         <div class="interface">
-            <div class="svgDisplay" id="display">
-                <svg display="none" class="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-                    index="-1"></svg>
-                <div class="button-container">
-                    <button style="display:none" class="previous">Previous</button>
-                    <button style="display:none" class="next">Next</button>
-                </div>
-
-            </div>
             <div class="fraction-input">
-                <form id="inputForm" onsubmit="crossingDiagonals(document.getElementById('display'),event)">
+                <form id="inputForm" onsubmit="calculate(event)">
                     <input id="a" type="number" placeholder="Numerator" min="1" required>
                     <div class="line"></div>
                     <input id="b" type="number" placeholder="Denominator" min="1" required>
@@ -33,11 +24,48 @@
                     <p id="notice"></p>
                 </form>
             </div>
+            <div style="display:none" class="svgDisplay" id="display1">
+                <h3 class="title">Crossing Diagonals</h3>
+                <svg id="crossingDiagonals" class="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+                    index="-1"></svg>
+                <div class="button-container">
+                    <button class="previous">Previous</button>
+                    <button class="next">Next</button>
+                </div>
+            </div>
+            <div style="display:none" class="svgDisplay" id="display2">
+                <h3 class="title">Fujimoto's Construction</h3>
+                <svg id="fujimotoConstruction" class="svgCanvas" viewBox="0 0 100 100"
+                    preserveAspectRatio="xMidYMid meet" index="-1"></svg>
+                <div class="button-container">
+                    <button class="previous">Previous</button>
+                    <button class="next">Next</button>
+                </div>
+
+            </div>
+
         </div>
     </div>
     <script src="creasePatternClass.js"></script>
     <script src="svgTools.js"></script>
     <script src="crossingDiagonals.js"></script>
+    <script src="fujimotoConstruction.js"></script>
+    <script src="generalFunctions.js"></script>
+    <script>
+        function calculate(event) {
+            event.preventDefault();
+            let a = parseInt(document.getElementById('a').value);
+            let b = parseInt(document.getElementById('b').value);
+            let notice = document.getElementById('notice');
+            if (a >= b) {
+                alert("Numerator must be less than the denominator");
+                return [0, 0, 0];
+            }
+            [a, b] = simplifyFraction(a, b, notice);
+            crossingDiagonals(document.getElementById('display1'));
+            fujimotoConstruction(document.getElementById('display2'));
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
 </body>
 
