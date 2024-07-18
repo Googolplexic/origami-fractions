@@ -12,7 +12,7 @@ function setupSVG(svgDiv) {
     svgDiv.style.display = "flex";
     var vBox = svg.getAttribute('viewBox').split(' ').map(Number);
     const size = Math.min(vBox[2], vBox[3]) * 0.9;
-    return [svg, a, b, previous, next, size, notice, title];
+    return [svg, a, b, previous, next, size, title];
 }
 
 function crossingDiagonals(svgDiv) {
