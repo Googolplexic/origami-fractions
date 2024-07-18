@@ -43,20 +43,40 @@ class CP {
         this.#createLineInSquare(a, b, this.#square, colour, type);
     }
 
-    createHorizontalPinch(y, side) {
+    createHorizontalPinch(y, side, length) {
         if (side === 'left') {
-            this.createCrease([0, y], [0.2, y], 'V', 'dashed');
+            this.createCrease([0, y], [length, y], 'V', 'dashed');
         }
         else {
-            this.createCrease([1, y], [0.8, y], 'V', 'dashed');
+            this.createCrease([1, y], [1 - length, y], 'V', 'dashed');
         }
 
     }
 
-    createArrow(a, b, dir) {
-        this.#createVerticalCurvedArrow(a, b, this.#square, dir);
+    createVerticalArrow(y1, y2, curveDir) {
+        if (curveDir === 'L') {
+            if (y2 > y1) {
+                this.#createVerticalCurvedArrow([0, y1], [0, y2], this.#square, [0.05, 0.05], [0.05, -0.05], 'L');
+            }
+            else {
+                this.#createVerticalCurvedArrow([0, y1], [0, y2], this.#square, [0.05, -0.05], [0.05, 0.05], 'L');
+            }
+        }
+        else {
+            if (y2 > y1) {
+                this.#createVerticalCurvedArrow([1, y1], [1, y2], this.#square, [-0.05, 0.05], [-0.05, -0.05], 'R');
+            }
+            else {
+                this.#createVerticalCurvedArrow([1, y1], [1, y2], this.#square, [-0.05, -0.05], [-0.05, 0.05], 'R');
+            }
+
+        }
     }
 
+
+    createArrow(a, b, aOffset, bOffset, dir) {
+        this.#createVerticalCurvedArrow(a, b, this.#square, aOffset, bOffset, dir);
+    }
     distance(a, b) {
         return this.#distanceInSquare(this.#square, this.#squareSize(this.#square), a, b);
     }
@@ -79,7 +99,7 @@ class CP {
         let x2 = this.#findX(square, size, b[0]);
         let y2 = this.#findY(square, size, b[1]);
 
-        return Math.sqrt((x2 - x1) ** 2, (y2 - y1) ** 2);
+        return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 
     }
 
@@ -145,20 +165,17 @@ class CP {
         this.#shapeArray.push(circle);
     }
 
-    #createVerticalCurvedArrow(a, b, square, dir) {
+    #createVerticalCurvedArrow(a, b, square, aOffset, bOffset, dir) {
         const size = this.#squareSize(this.#square);
-
-
-        let y1 = this.#findY(square, size, a);
-        let y2 = this.#findY(square, size, b);
-        if (a !== 0) {
-            y1 += size * 0.05;
-            y2 -= size * 0.05;
-        }
-        else {
-            y1 -= size * 0.05;
-            y2 += size * 0.05;
-        }
+        console.log(a, b);
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
+        x1 += size * aOffset[0];
+        y1 -= size * aOffset[1];
+        x2 += size * bOffset[0];
+        y2 -= size * bOffset[1];
 
         const marker = document.createElementNS(this.#ns, 'marker');
         marker.setAttribute('id', 'arrowhead');
@@ -175,10 +192,20 @@ class CP {
         marker.appendChild(arrowhead);
 
         this.#shapeArray.push(marker);
-        let x = dir === 0 ? (parseFloat(square.getAttribute('x')) + (size * 0.05)) : (parseFloat(square.getAttribute('x')) + (size * 0.95));
-        let q = x + ((dir === 0) ? size * 0.2 : -size * 0.2);
+        const distance = this.distance(a, b);
+        const slope = -(b[0] - a[0]) / (b[1] - a[1]);
+        let xq, yq;
+        console.log(slope, distance, x1, x2);
+        if (slope > 0) {
+            xq = (x1 + x2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
+            yq = (y1 + y2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
+        }
+        else {
+            xq = (x1 + x2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
+            yq = (y1 + y2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
+        } console.log("EWRFws", xq, yq);
         const path = document.createElementNS(this.#ns, 'path');
-        const pathdata = `M ${x} ${y1} Q ${q} ${(y1 + y2) / 2}, ${x} ${y2}`;
+        const pathdata = `M ${x1} ${y1} Q ${xq} ${yq}, ${x2} ${y2}`;
         path.setAttribute('d', pathdata);
         path.setAttribute('stroke', '#444444');
         path.setAttribute('stroke-width', '0.8%');

@@ -33,11 +33,11 @@ function crossingDiagonalsLeft(arr, left, size, svg) {
             yPos = (1 + yPos) / 2;
         }
         console.log("YPos: ", yPos);
-        newCP.createHorizontalPinch(yPos, 'left');
+        newCP.createHorizontalPinch(yPos, 'left', 0.2);
         if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
         newCP.createPoint([0, oldYPos]);
         newCP.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 0);
+        newCP.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
         arr.push(newCP);
     }
     return yPos;
@@ -59,12 +59,12 @@ function crossingDiagonalsRight(arr, right, lPos, size, svg) {
             yPos = (1 + yPos) / 2;
         }
         console.log("YPos: ", yPos);
-        newCP.createHorizontalPinch(yPos, 'right');
+        newCP.createHorizontalPinch(yPos, 'right', 0.2);
         if (lPos !== 1) { newCP.createCrease([0, lPos], [0.2, lPos], 'E'); }
         if (oldYPos !== 1) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
         newCP.createPoint([1, oldYPos]);
         newCP.createPoint([1, (x === '0' ? 0 : 1)]);
-        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 1);
+        newCP.createVerticalArrow(x === '0' ? 0 : 1, oldYPos, 'R');
         arr.push(newCP);
     }
     return yPos == 1 ? 0 : yPos;

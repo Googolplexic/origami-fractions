@@ -4,9 +4,9 @@ function generateFujimotoConstruction(svg, size, n, d) {
     a = a.split('').reverse().join('');
     console.log(x, a);
     const CP_Array = [];
-    const lPoint = fujimotoLeft(CP_Array, x, size, svg);
+    const [lPoint, loc] = fujimotoLeft(CP_Array, x, size, svg);
     if (a !== '') {
-        const firstPoint = foldOnLine(CP_Array, lPoint, size, svg);
+        const firstPoint = foldOnLine(CP_Array, lPoint, loc, size, svg);
         const [rPoint, l1, l2] = foldSecond(CP_Array, firstPoint, size, svg);
         fujimotoRight(CP_Array, rPoint, a, l1, l2, size, svg);
     }
@@ -21,8 +21,10 @@ function generateFujimotoConstruction(svg, size, n, d) {
 
 
 function fujimotoLeft(arr, left, size, svg) {
+
     let yPos = 1;
-    if (left === '1') { yPos = 0; }
+    let d;
+    if (left.length === 1) { yPos = 0; }
     for (let i = 0; i < left.length; i++) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
@@ -35,38 +37,37 @@ function fujimotoLeft(arr, left, size, svg) {
             yPos = (1 + yPos) / 2;
         }
         console.log("YPos: ", yPos);
-        newCP.createHorizontalPinch(yPos, 'left');
-        if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
+        if (i + 1 === left.length) {
+            const a = 1;
+            const b = -2;
+            const c = yPos ** 2;
+            d = quadraticEquation(a, b, c)[1];
+            console.log("d", d);
+            newCP.createHorizontalPinch(yPos, 'left', (d <= 0.8) ? d + 0.2 : 1);
+        }
+        else { newCP.createHorizontalPinch(yPos, 'left', 0.2); };
+
+        newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
+
         newCP.createPoint([0, oldYPos]);
         newCP.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 0);
+        newCP.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
         arr.push(newCP);
     }
-    return yPos;
+    return [yPos, d];
 
 }
 
-function foldOnLine(arr, yPoint, size, svg) {
+function foldOnLine(arr, yPoint, loc, size, svg) {
     let newCP = new CP(size, svg);
-    newCP.createCrease([0, yPoint], [0.8, yPoint], 'E');
 
-    const x1 = 0;
-    const x2 = 1;
-    const y1 = yPoint;
-    const y2 = yPoint;
-    const xc = 1;
-    const yc = 0;
-    const r = 1;
-    const a = (x2 - x1) ** 2 + (y2 - y1) ** 2;
-    const b = 2 * (x2 - x1) * (x1 - xc) + 2 * (y2 - y1) * (y1 - yc);
-    const c = xc ** 2 + yc ** 2 + x1 ** 2 + y1 ** 2 - 2 * (xc * x1 + yc * y1) - r ** 2;
-    console.log(a, b, c);
-    const d = quadraticEquation(a, b, c)[1];
-
-    const point = (yPoint - d) / (1 - d);
-
+    const point = (yPoint - loc) / (1 - loc);
+    newCP.createCrease([0, yPoint], [(loc <= 0.8) ? loc + 0.2 : 1, yPoint], 'E');
 
     newCP.createCrease([point, 1], [1, 0], 'V', 'dashed');
+    newCP.createPoint([1, 1]);
+    newCP.createPoint([loc, yPoint]);
+    newCP.createArrow([1, 1], [loc, yPoint], [-0.05, -0.03], [0.02, 0.05], 'R');
     arr.push(newCP);
     return point;
 }
@@ -79,13 +80,19 @@ function foldSecond(arr, point, size, svg) {
     const midPoint = (1 + point) / 2;
     const rPoint = slope * ((1 - point) / 2) + 0.5;
 
-    newCP.createCrease([midPoint, 0.5], [1, rPoint], 'V', 'dashed');
+    x1 = midPoint - 0.1 / Math.sqrt(1 + slope ** 2);
+    y1 = 0.5 - 0.1 * slope / Math.sqrt(1 + slope ** 2);
+    newCP.createCrease([x1, y1], [1, rPoint], 'V', 'dashed');
+    newCP.createPoint([1, 0]);
+    newCP.createPoint([point, 1]);
+    newCP.createArrow([1, 0], [point, 1], [-0.05, 0.02], [0, -0.05], 'L');
     arr.push(newCP);
-    return [rPoint, [midPoint, 0.5], [1, rPoint]];
+    return [rPoint, [x1, y1], [1, rPoint]];
 }
 
 function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
     let yPos = rPoint;
+    console.log("YPOSESE:", rPoint);
     for (let i = 0; i < right.length; i++) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
@@ -95,17 +102,21 @@ function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
             yPos /= 2;
         }
         else {
-            yPos = (1 + yPos) / 2;
+            yPos = (rPoint + yPos) / 2;
         }
         console.log("YPos: ", yPos);
-        newCP.createHorizontalPinch(yPos, 'right');
-        if (i === 0) { newCP.createCrease(l1, l2, 'E'); }
-        else { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
+        newCP.createHorizontalPinch(yPos, 'right', 0.2);
+        newCP.createCrease(l1, l2, 'E');
+        if (i !== 0) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
         newCP.createPoint([1, oldYPos]);
-        newCP.createPoint([1, (x === '0' ? 0 : 1)]);
-        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 1);
+        newCP.createPoint([1, (x === '0' ? 0 : rPoint)]);
+        newCP.createVerticalArrow(x === '0' ? 0 : rPoint, oldYPos, 'R');
         arr.push(newCP);
     }
+    let lastCP = new CP(size, svg);
+    lastCP.createCrease([0, yPos], [1, yPos], 'E');
+    console.log("YPOSESE:", yPos);
+    arr.push(lastCP);
 
 }
 
@@ -147,10 +158,8 @@ function fujimotoBinary(n, d) {
     if (xBin.length > 1) {
         xBin = xBin.slice(0, -1) + '0';
     }
-    aBin = p_a !== 1 ? a.toString(2).padStart(Math.log2(p_a), '0') : "";
-    if (aBin.length > 1) {
-        aBin = aBin.slice(0, -1) + '0';
-    }
+    aBin = p_a !== 1 ? a.toString(2).padStart(Math.log2(p_a), '0').slice(0, -1) + '0' : "";
+
 
     console.log("x:", x, p_x, xBin);
     console.log("a:", a, p_a, aBin);

@@ -15,24 +15,6 @@
         </div>
 
         <div class="interface">
-            <div class="svgDisplay" id="display1">
-                <svg display="none" class="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-                    index="-1"></svg>
-                <div class="button-container">
-                    <button style="display:none" class="previous">Previous</button>
-                    <button style="display:none" class="next">Next</button>
-                </div>
-
-            </div>
-            <div class="svgDisplay" id="display2">
-                <svg display="none" class="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-                    index="-1"></svg>
-                <div class="button-container">
-                    <button style="display:none" class="previous">Previous</button>
-                    <button style="display:none" class="next">Next</button>
-                </div>
-
-            </div>
             <div class="fraction-input">
                 <form id="inputForm"
                     onsubmit="crossingDiagonals(document.getElementById('display1'),event); fujimotoConstruction(document.getElementById('display2'),event)">
@@ -43,6 +25,26 @@
                     <p id="notice"></p>
                 </form>
             </div>
+            <div style="display:none" class="svgDisplay" id="display1">
+                <h3 class="title">Crossing Diagonals</h3>
+                <svg id="crossingDiagonals" class="svgCanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+                    index="-1"></svg>
+                <div class="button-container">
+                    <button class="previous">Previous</button>
+                    <button class="next">Next</button>
+                </div>
+            </div>
+            <div style="display:none" class="svgDisplay" id="display2">
+                <h3 class="title">Fujimoto's Construction</h3>
+                <svg id="fujimotoConstruction" class="svgCanvas" viewBox="0 0 100 100"
+                    preserveAspectRatio="xMidYMid meet" index="-1"></svg>
+                <div class="button-container">
+                    <button class="previous">Previous</button>
+                    <button class="next">Next</button>
+                </div>
+
+            </div>
+
         </div>
     </div>
     <script src="creasePatternClass.js"></script>
