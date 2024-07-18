@@ -62,8 +62,8 @@
                 return;
             }
             [a, b] = simplifyFraction(a, b, notice);
-            crossingDiagonals(document.getElementById('display1'));
-            fujimotoConstruction(document.getElementById('display2'));
+            crossingDiagonals(document.getElementById('display1'), a, b);
+            fujimotoConstruction(document.getElementById('display2'), a, b);
         }
     </script>
     <link rel="stylesheet" href="style.css">

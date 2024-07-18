@@ -144,7 +144,7 @@ function fujimotoBinary(n, d) {
     }
     let a = parseInt(n);
     let p_x = p;
-    let p_a = n === 0 ? 1 : p;
+    let p_a = p;
 
     let xGCD = findGCD(x, p_x);
 
@@ -159,5 +159,6 @@ function fujimotoBinary(n, d) {
         xBin = xBin.slice(0, -1) + '0';
     }
     aBin = p_a !== 1 ? a.toString(2).padStart(Math.log2(p_a), '0').slice(0, -1) + '0' : "";
+
     return [xBin, aBin];
 }

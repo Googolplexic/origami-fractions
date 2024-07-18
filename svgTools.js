@@ -3,8 +3,6 @@ const map = new Map();
 
 function setupSVG(svgDiv) {
 
-    let a = parseInt(document.getElementById('a').value);
-    let b = parseInt(document.getElementById('b').value);
     let previous = svgDiv.getElementsByClassName('previous')[0];
     let next = svgDiv.getElementsByClassName('next')[0];
     let svg = svgDiv.getElementsByClassName('svgCanvas')[0];
@@ -12,11 +10,11 @@ function setupSVG(svgDiv) {
     svgDiv.style.display = "flex";
     var vBox = svg.getAttribute('viewBox').split(' ').map(Number);
     const size = Math.min(vBox[2], vBox[3]) * 0.9;
-    return [svg, a, b, previous, next, size, title];
+    return [svg, previous, next, size, title];
 }
 
-function crossingDiagonals(svgDiv) {
-    const [svg, a, b, previous, next, size, title] = setupSVG(svgDiv);
+function crossingDiagonals(svgDiv, a, b) {
+    const [svg, previous, next, size, title] = setupSVG(svgDiv);
     if (a === 0) { return; }
     CP_array = generateCrossingDiagonals(svg, size, a, b);
     map.set(svg.id, CP_array);
@@ -34,9 +32,9 @@ function crossingDiagonals(svgDiv) {
     };
 }
 
-function fujimotoConstruction(svgDiv) {
+function fujimotoConstruction(svgDiv, a, b) {
 
-    const [svg, a, b, previous, next, size, title] = setupSVG(svgDiv);
+    const [svg, previous, next, size, title] = setupSVG(svgDiv);
     if (a === 0) { return; }
     CP_array = generateFujimotoConstruction(svg, size, a, b);
     map.set(svg.id, CP_array);
