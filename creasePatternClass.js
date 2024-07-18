@@ -167,7 +167,7 @@ class CP {
 
     #createVerticalCurvedArrow(a, b, square, aOffset, bOffset, dir) {
         const size = this.#squareSize(this.#square);
-        console.log(a, b);
+    
         let x1 = this.#findX(square, size, a[0]);
         let y1 = this.#findY(square, size, a[1]);
         let x2 = this.#findX(square, size, b[0]);
@@ -195,7 +195,7 @@ class CP {
         const distance = this.distance(a, b);
         const slope = -(b[0] - a[0]) / (b[1] - a[1]);
         let xq, yq;
-        console.log(slope, distance, x1, x2);
+
         if (slope > 0) {
             xq = (x1 + x2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
             yq = (y1 + y2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
@@ -203,7 +203,7 @@ class CP {
         else {
             xq = (x1 + x2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
             yq = (y1 + y2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
-        } console.log("EWRFws", xq, yq);
+        } c
         const path = document.createElementNS(this.#ns, 'path');
         const pathdata = `M ${x1} ${y1} Q ${xq} ${yq}, ${x2} ${y2}`;
         path.setAttribute('d', pathdata);
@@ -211,7 +211,7 @@ class CP {
         path.setAttribute('stroke-width', '0.8%');
         path.setAttribute('fill', 'none');
         path.setAttribute('marker-end', 'url(#arrowhead)');
-        console.log(path);
+
 
         this.#shapeArray.push(path);
 

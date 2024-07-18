@@ -11,7 +11,7 @@ function findIntersection(a, b) {
 
 function findGCD(a, b) {
     while (b !== 0) {
-        console.log(b);
+
         let temp = b;
         b = a % b;
         a = temp;

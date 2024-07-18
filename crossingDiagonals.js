@@ -1,8 +1,7 @@
-function generateCrossingDiagonals(svg, size, n, d, notice) {
-    [a, b] = crossingDiagonalsBinary(n, d, notice);
+function generateCrossingDiagonals(svg, size, n, d) {
+    [a, b] = crossingDiagonalsBinary(n, d);
     a = a.split('').reverse().join('');
     b = b.split('').reverse().join('');
-    console.log(a, b);
     const CP_Array = [];
     let lPoint = crossingDiagonalsLeft(CP_Array, a, size, svg);
     if (a !== b) {
@@ -14,7 +13,6 @@ function generateCrossingDiagonals(svg, size, n, d, notice) {
         newCP.createCrease([0, lPoint], [1, lPoint], 'E');
         CP_Array.push(newCP);
     }
-    console.log(CP_Array.length);
     return CP_Array;
 }
 
@@ -25,14 +23,14 @@ function crossingDiagonalsLeft(arr, left, size, svg) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
         x = left[i];
-        console.log("Reading x", x);
+
         if (x === '0') {
             yPos /= 2;
         }
         else {
             yPos = (1 + yPos) / 2;
         }
-        console.log("YPos: ", yPos);
+
         newCP.createHorizontalPinch(yPos, 'left', 0.2);
         if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
         newCP.createPoint([0, oldYPos]);
@@ -51,14 +49,14 @@ function crossingDiagonalsRight(arr, right, lPos, size, svg) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
         x = right[i];
-        console.log("Reading x", x);
+
         if (x === '0') {
             yPos /= 2;
         }
         else {
             yPos = (1 + yPos) / 2;
         }
-        console.log("YPos: ", yPos);
+
         newCP.createHorizontalPinch(yPos, 'right', 0.2);
         if (lPos !== 1) { newCP.createCrease([0, lPos], [0.2, lPos], 'E'); }
         if (oldYPos !== 1) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
@@ -101,7 +99,7 @@ function crossingDiagonalsBinary(a, b) {
     }
     let p = 1;
     while (p < a || p < b - a) { p *= 2; }
-    console.log(p);
+
     let mBin, nBin;
     let m = a;
     let n = p + a - b;
@@ -113,8 +111,7 @@ function crossingDiagonalsBinary(a, b) {
     let nGCD = findGCD(n, p_n);
     n /= nGCD;
     p_n /= nGCD;
-    console.log(p_m, p_n);
-    console.log(n);
+
     mBin = p_m !== 1 ? m.toString(2).padStart(Math.log2(p_m), '0') : "";
     if (mBin.length > 1) {
         mBin = mBin.slice(0, -1) + '0';
@@ -124,7 +121,6 @@ function crossingDiagonalsBinary(a, b) {
     if (nBin.length > 1) {
         nBin = nBin.slice(0, -1) + '0';
     }
-    console.log("m:", m, p_m, mBin);
-    console.log("n:", n, p_n, nBin);
+
     return [mBin, nBin];
 }

@@ -2,7 +2,7 @@ function generateFujimotoConstruction(svg, size, n, d) {
     [x, a] = fujimotoBinary(n, d);
     x = x.split('').reverse().join('');
     a = a.split('').reverse().join('');
-    console.log(x, a);
+
     const CP_Array = [];
     const [lPoint, loc] = fujimotoLeft(CP_Array, x, size, svg);
     if (a !== '') {
@@ -15,7 +15,7 @@ function generateFujimotoConstruction(svg, size, n, d) {
         newCP.createCrease([0, lPoint], [1, lPoint], 'E');
         CP_Array.push(newCP);
     }
-    console.log(CP_Array.length);
+
     return CP_Array;
 }
 
@@ -29,20 +29,20 @@ function fujimotoLeft(arr, left, size, svg) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
         x = left[i];
-        console.log("Reading x", x);
+
         if (x === '0') {
             yPos /= 2;
         }
         else {
             yPos = (1 + yPos) / 2;
         }
-        console.log("YPos: ", yPos);
+
         if (i + 1 === left.length) {
             const a = 1;
             const b = -2;
             const c = yPos ** 2;
             d = quadraticEquation(a, b, c)[1];
-            console.log("d", d);
+
             newCP.createHorizontalPinch(yPos, 'left', (d <= 0.8) ? d + 0.2 : 1);
         }
         else { newCP.createHorizontalPinch(yPos, 'left', 0.2); };
@@ -92,19 +92,19 @@ function foldSecond(arr, point, size, svg) {
 
 function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
     let yPos = rPoint;
-    console.log("YPOSESE:", rPoint);
+
     for (let i = 0; i < right.length; i++) {
         let oldYPos = yPos;
         let newCP = new CP(size, svg);
         x = right[i];
-        console.log("Reading x", x);
+
         if (x === '0') {
             yPos /= 2;
         }
         else {
             yPos = (rPoint + yPos) / 2;
         }
-        console.log("YPos: ", yPos);
+
         newCP.createHorizontalPinch(yPos, 'right', 0.2);
         newCP.createCrease(l1, l2, 'E');
         if (i !== 0) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
@@ -115,7 +115,7 @@ function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
     }
     let lastCP = new CP(size, svg);
     lastCP.createCrease([0, yPos], [1, yPos], 'E');
-    console.log("YPOSESE:", yPos);
+
     arr.push(lastCP);
 
 }
@@ -132,36 +132,32 @@ function fujimotoBinary(n, d) {
     let p = 1;
     while (p < d) { p *= 2; }
     if (p > 1) { p /= 2; }
-    console.log(p);
+
     let xBin, aBin;
     let x = parseInt(d - p);
     if (x === p) {
         let nBin = p !== 1 ? n.toString(2).padStart(Math.log2(p) + 1, '0') : '0';
         nBin = nBin.slice(0, -1) + '0';
-        console.log("bin", nBin);
+
         return [nBin, ''];
 
     }
     let a = parseInt(n);
     let p_x = p;
     let p_a = n === 0 ? 1 : p;
-    console.log(p);
+
     let xGCD = findGCD(x, p_x);
-    console.log(p);
+
     x /= xGCD;
     p_x /= xGCD;
     let aGCD = findGCD(a, p_a);
     a /= aGCD;
     p_a /= aGCD;
-    console.log(p_x, p_a);
+
     xBin = p_x !== 1 ? x.toString(2).padStart(Math.log2(p_x), '0') : "";
     if (xBin.length > 1) {
         xBin = xBin.slice(0, -1) + '0';
     }
     aBin = p_a !== 1 ? a.toString(2).padStart(Math.log2(p_a), '0').slice(0, -1) + '0' : "";
-
-
-    console.log("x:", x, p_x, xBin);
-    console.log("a:", a, p_a, aBin);
     return [xBin, aBin];
 }

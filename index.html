@@ -16,8 +16,7 @@
 
         <div class="interface">
             <div class="fraction-input">
-                <form id="inputForm"
-                    onsubmit="crossingDiagonals(document.getElementById('display1'),event); fujimotoConstruction(document.getElementById('display2'),event)">
+                <form id="inputForm" onsubmit="calculate(event)">
                     <input id="a" type="number" placeholder="Numerator" min="1" required>
                     <div class="line"></div>
                     <input id="b" type="number" placeholder="Denominator" min="1" required>
@@ -52,6 +51,21 @@
     <script src="crossingDiagonals.js"></script>
     <script src="fujimotoConstruction.js"></script>
     <script src="generalFunctions.js"></script>
+    <script>
+        function calculate(event) {
+            event.preventDefault();
+            let a = parseInt(document.getElementById('a').value);
+            let b = parseInt(document.getElementById('b').value);
+            let notice = document.getElementById('notice');
+            if (a >= b) {
+                alert("Numerator must be less than the denominator");
+                return [0, 0, 0];
+            }
+            [a, b] = simplifyFraction(a, b, notice);
+            crossingDiagonals(document.getElementById('display1'));
+            fujimotoConstruction(document.getElementById('display2'));
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
 </body>
 
