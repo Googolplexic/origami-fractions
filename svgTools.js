@@ -26,6 +26,26 @@ function crossingDiagonals(svgDiv, event) {
     event.preventDefault();
     const [svg, a, b, previous, next, size, notice] = setupSVG(svgDiv, event);
     if (a === 0) { return; }
+    CP_array = generateCrossingDiagonals(svg, size, a, b, notice);
+    map.set(svg.id, CP_array);
+    svg.innerHTML = "";
+    CP_array[0].drawCP();
+    svg.setAttribute('index', 0);
+
+
+    previous.onclick = function () {
+        getPrevious(svg);
+    };
+    next.onclick = function () {
+        getNext(svg);
+    };
+}
+
+function fujimotoConstruction(svgDiv, event) {
+    console.log(svgDiv);
+    event.preventDefault();
+    const [svg, a, b, previous, next, size, notice] = setupSVG(svgDiv, event);
+    if (a === 0) { return; }
     CP_array = generateFujimotoConstruction(svg, size, a, b, notice);
     map.set(svg.id, CP_array);
     svg.innerHTML = "";

@@ -4,17 +4,17 @@ function generateFujimotoConstruction(svg, size, n, d) {
     a = a.split('').reverse().join('');
     console.log(x, a);
     const CP_Array = [];
-    let lPoint = fujimotoLeft(CP_Array, x, size, svg);
-    foldOnLine(CP_Array, lPoint, size, svg);
-    // if (a !== b) {
-    //     let rPoint = generateRight(CP_Array, b, lPoint, size, svg);
-    //     generateDiagonals(CP_Array, lPoint, rPoint, size, svg);
-    // }
-    // else {
-    //     let newCP = new CP(size, svg);
-    //     newCP.createCrease([0, lPoint], [1, lPoint], 'E');
-    //     CP_Array.push(newCP);
-    // }
+    const lPoint = fujimotoLeft(CP_Array, x, size, svg);
+    if (a !== '') {
+        const firstPoint = foldOnLine(CP_Array, lPoint, size, svg);
+        const [rPoint, l1, l2] = foldSecond(CP_Array, firstPoint, size, svg);
+        fujimotoRight(CP_Array, rPoint, a, l1, l2, size, svg);
+    }
+    else {
+        let newCP = new CP(size, svg);
+        newCP.createCrease([0, lPoint], [1, lPoint], 'E');
+        CP_Array.push(newCP);
+    }
     console.log(CP_Array.length);
     return CP_Array;
 }
@@ -48,7 +48,7 @@ function fujimotoLeft(arr, left, size, svg) {
 
 function foldOnLine(arr, yPoint, size, svg) {
     let newCP = new CP(size, svg);
-    if (yPoint !== 1) { newCP.createCrease([0, yPoint], [0.8, yPoint], 'E'); }
+    newCP.createCrease([0, yPoint], [0.8, yPoint], 'E');
 
     const x1 = 0;
     const x2 = 1;
@@ -62,15 +62,53 @@ function foldOnLine(arr, yPoint, size, svg) {
     const c = xc ** 2 + yc ** 2 + x1 ** 2 + y1 ** 2 - 2 * (xc * x1 + yc * y1) - r ** 2;
     console.log(a, b, c);
     const d = quadraticEquation(a, b, c)[1];
-    
+
     const point = (yPoint - d) / (1 - d);
 
 
     newCP.createCrease([point, 1], [1, 0], 'V', 'dashed');
     arr.push(newCP);
+    return point;
+}
 
+
+function foldSecond(arr, point, size, svg) {
+    let newCP = new CP(size, svg);
+    newCP.createCrease([point, 1], [1, 0], 'E');
+    const slope = 1 - point;
+    const midPoint = (1 + point) / 2;
+    const rPoint = slope * ((1 - point) / 2) + 0.5;
+
+    newCP.createCrease([midPoint, 0.5], [1, rPoint], 'V', 'dashed');
+    arr.push(newCP);
+    return [rPoint, [midPoint, 0.5], [1, rPoint]];
+}
+
+function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
+    let yPos = rPoint;
+    for (let i = 0; i < right.length; i++) {
+        let oldYPos = yPos;
+        let newCP = new CP(size, svg);
+        x = right[i];
+        console.log("Reading x", x);
+        if (x === '0') {
+            yPos /= 2;
+        }
+        else {
+            yPos = (1 + yPos) / 2;
+        }
+        console.log("YPos: ", yPos);
+        newCP.createHorizontalPinch(yPos, 'right');
+        if (i === 0) { newCP.createCrease(l1, l2, 'E'); }
+        else { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
+        newCP.createPoint([1, oldYPos]);
+        newCP.createPoint([1, (x === '0' ? 0 : 1)]);
+        newCP.createArrow((x === '0' ? 0 : 1), oldYPos, 1);
+        arr.push(newCP);
+    }
 
 }
+
 
 function quadraticEquation(a, b, c) {
     const determinant = b ** 2 - 4 * a * c;
