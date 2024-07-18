@@ -59,7 +59,7 @@
             let notice = document.getElementById('notice');
             if (a >= b) {
                 alert("Numerator must be less than the denominator");
-                return [0, 0, 0];
+                return;
             }
             [a, b] = simplifyFraction(a, b, notice);
             crossingDiagonals(document.getElementById('display1'));
