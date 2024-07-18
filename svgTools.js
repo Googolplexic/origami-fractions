@@ -12,6 +12,7 @@ function setupSVG(svgDiv, event) {
     let next = svgDiv.getElementsByClassName('next')[0];
     let svg = svgDiv.getElementsByClassName('svgCanvas')[0];
     let notice = document.getElementById('notice');
+    [a, b] = simplifyFraction(a, b, notice);
     svg.setAttribute('display', 'block');
     previous.style.display = "inline-block";
     next.style.display = "inline-block";
@@ -25,7 +26,7 @@ function crossingDiagonals(svgDiv, event) {
     event.preventDefault();
     const [svg, a, b, previous, next, size, notice] = setupSVG(svgDiv, event);
     if (a === 0) { return; }
-    CP_array = generateCrossingDiagonals(svg, size, a, b, notice);
+    CP_array = generateFujimotoConstruction(svg, size, a, b, notice);
     map.set(svg.id, CP_array);
     svg.innerHTML = "";
     CP_array[0].drawCP();
@@ -68,3 +69,5 @@ function getNext(svg) {
         array[idx].drawCP();
     }
 }
+
+

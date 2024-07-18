@@ -57,6 +57,32 @@ class CP {
         this.#createVerticalCurvedArrow(a, b, this.#square, dir);
     }
 
+    distance(a, b) {
+        return this.#distanceInSquare(this.#square, this.#squareSize(this.#square), a, b);
+    }
+
+    #squareSize(square) {
+        return parseFloat(square.getAttribute('size'));
+    }
+    #findY(square, size, y) {
+        return parseFloat(square.getAttribute('y')) + size - y * size;
+    }
+
+    #findX(square, size, x) {
+        return parseFloat(square.getAttribute('y')) + x * size;
+    }
+
+    #distanceInSquare(square, size, a, b) {
+
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
+
+        return Math.sqrt((x2 - x1) ** 2, (y2 - y1) ** 2);
+
+    }
+
     #sort(a, b) {
         const order = {
             'line': 1,
@@ -87,12 +113,12 @@ class CP {
 
     #createLineInSquare(a, b, square, colour, type) {
         const line = document.createElementNS(this.#ns, 'line');
-        const size = parseFloat(square.getAttribute('size'));
+        const size = this.#squareSize(this.#square);
 
-        let x1 = parseFloat(square.getAttribute('x')) + a[0] * size;
-        let y1 = parseFloat(square.getAttribute('y')) + size - a[1] * size;
-        let x2 = parseFloat(square.getAttribute('x')) + b[0] * size;
-        let y2 = parseFloat(square.getAttribute('y')) + size - b[1] * size;
+        let x1 = this.#findX(square, size, a[0]);
+        let y1 = this.#findY(square, size, a[1]);
+        let x2 = this.#findX(square, size, b[0]);
+        let y2 = this.#findY(square, size, b[1]);
 
         line.setAttribute('x1', x1);
         line.setAttribute('y1', y1);
@@ -107,10 +133,10 @@ class CP {
 
     #createCircleInSquare(loc, square, radius, colour) {
         const circle = document.createElementNS(this.#ns, 'circle');
-        const size = parseFloat(square.getAttribute('size'));
+        const size = this.#squareSize(this.#square);
 
-        let x = parseFloat(square.getAttribute('x')) + loc[0] * size;
-        let y = parseFloat(square.getAttribute('y')) + size - loc[1] * size;
+        let x = this.#findX(square, size, loc[0]);
+        let y = this.#findY(square, size, loc[1]);
         circle.setAttribute('cx', x);
         circle.setAttribute('cy', y);
         circle.setAttribute('r', radius);
@@ -120,10 +146,11 @@ class CP {
     }
 
     #createVerticalCurvedArrow(a, b, square, dir) {
-        const size = parseFloat(square.getAttribute('size'));
+        const size = this.#squareSize(this.#square);
 
-        let y1 = parseFloat(square.getAttribute('y')) + size - a * size;
-        let y2 = parseFloat(square.getAttribute('y')) + size - b * size;
+
+        let y1 = this.#findY(square, size, a);
+        let y2 = this.#findY(square, size, b);
         if (a !== 0) {
             y1 += size * 0.05;
             y2 -= size * 0.05;
