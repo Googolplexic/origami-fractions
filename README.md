@@ -6,4 +6,4 @@ Also doubles as CSS practice for me
 Current state: Working barebones model done
 Current goal(s): Making it look nicer, adding comments/documentation, and cleaning it up
 
-Future goal(s): adding different methods
+Future goal(s): Noma's/Haga's methods?
