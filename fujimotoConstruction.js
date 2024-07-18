@@ -104,10 +104,10 @@ function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
         else {
             yPos = (rPoint + yPos) / 2;
         }
-
-        newCP.createHorizontalPinch(yPos, 'right', 0.2);
-        newCP.createCrease(l1, l2, 'E');
         if (i !== 0) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
+    
+        newCP.createCrease(l1, l2, 'E');
+        newCP.createHorizontalPinch(yPos, 'right', 0.2);
         newCP.createPoint([1, oldYPos]);
         newCP.createPoint([1, (x === '0' ? 0 : rPoint)]);
         newCP.createVerticalArrow(x === '0' ? 0 : rPoint, oldYPos, 'R');
