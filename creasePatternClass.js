@@ -203,7 +203,7 @@ class CP {
         else {
             xq = (x1 + x2) / 2 - (dir === 'L' ? -distance * 0.2 : distance * 0.2) / Math.sqrt(1 + slope ** 2);
             yq = (y1 + y2) / 2 + (dir === 'L' ? -distance * 0.2 : distance * 0.2) * slope / Math.sqrt(1 + slope ** 2);
-        } c
+        }
         const path = document.createElementNS(this.#ns, 'path');
         const pathdata = `M ${x1} ${y1} Q ${xq} ${yq}, ${x2} ${y2}`;
         path.setAttribute('d', pathdata);
