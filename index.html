@@ -11,15 +11,15 @@
     <div class="container">
         <div class="header">
             <h1>Origami Fractions</h1>
-            <p>Enter in a fraction and it will generate a sequence of steps to mark it on a square piece of paper</p>
+            <p>Enter in numerator fraction and it will generate numerator sequence of steps to mark it on numerator square piece of paper</p>
         </div>
 
         <div class="interface">
             <div class="fraction-input">
                 <form id="inputForm" onsubmit="calculate(event)">
-                    <input id="a" type="number" placeholder="Numerator" min="1" required>
+                    <input id="numerator" type="number" placeholder="Numerator" min="1" required>
                     <div class="line"></div>
-                    <input id="b" type="number" placeholder="Denominator" min="1" required>
+                    <input id="denominator" type="number" placeholder="Denominator" min="1" required>
                     <button type="submit">Calculate</button>
                     <p id="notice"></p>
                 </form>
@@ -54,16 +54,16 @@
     <script>
         function calculate(event) {
             event.preventDefault();
-            let a = parseInt(document.getElementById('a').value);
-            let b = parseInt(document.getElementById('b').value);
+            let numerator = parseInt(document.getElementById('numerator').value);
+            let denominator = parseInt(document.getElementById('denominator').value);
             let notice = document.getElementById('notice');
-            if (a >= b) {
+            if (numerator >= denominator) {
                 alert("Numerator must be less than the denominator");
                 return;
             }
-            [a, b] = simplifyFraction(a, b, notice);
-            crossingDiagonals(document.getElementById('display1'), a, b);
-            fujimotoConstruction(document.getElementById('display2'), a, b);
+            [numerator, denominator] = simplifyFraction(numerator, denominator, notice);
+            crossingDiagonals(document.getElementById('display1'), numerator, denominator);
+            fujimotoConstruction(document.getElementById('display2'), numerator, denominator);
         }
     </script>
     <link rel="stylesheet" href="style.css">

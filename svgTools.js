@@ -13,14 +13,14 @@ function setupSVG(svgDiv) {
     return [svg, previous, next, size, title];
 }
 
-function crossingDiagonals(svgDiv, a, b) {
+function crossingDiagonals(svgDiv, numerator, denominator) {
     const [svg, previous, next, size, title] = setupSVG(svgDiv);
-    if (a === 0) { return; }
-    CP_array = generateCrossingDiagonals(svg, size, a, b);
-    map.set(svg.id, CP_array);
-    title.textContent = `Crossing Diagonals: ${CP_array.length - 1} folds`;
+    if (numerator === 0) { return; }
+    creasePatternArray = generateCrossingDiagonals(svg, size, numerator, denominator);
+    map.set(svg.id, creasePatternArray);
+    title.textContent = `Crossing Diagonals: ${creasePatternArray.length - 1} folds`;
     svg.innerHTML = "";
-    CP_array[0].drawCP();
+    creasePatternArray[0].drawCreasePattern();
     svg.setAttribute('index', 0);
 
 
@@ -32,15 +32,15 @@ function crossingDiagonals(svgDiv, a, b) {
     };
 }
 
-function fujimotoConstruction(svgDiv, a, b) {
+function fujimotoConstruction(svgDiv, numerator, denominator) {
 
     const [svg, previous, next, size, title] = setupSVG(svgDiv);
-    if (a === 0) { return; }
-    CP_array = generateFujimotoConstruction(svg, size, a, b);
-    map.set(svg.id, CP_array);
-    title.textContent = `Fujimoto's Construction: ${CP_array.length - 1} folds`;
+    if (numerator === 0) { return; }
+    creasePatternArray = generateFujimotoConstruction(svg, size, numerator, denominator);
+    map.set(svg.id, creasePatternArray);
+    title.textContent = `Fujimoto's Construction: ${creasePatternArray.length - 1} folds`;
     svg.innerHTML = "";
-    CP_array[0].drawCP();
+    creasePatternArray[0].drawCreasePattern();
     svg.setAttribute('index', 0);
 
 
@@ -54,30 +54,30 @@ function fujimotoConstruction(svgDiv, a, b) {
 
 
 function getPrevious(svg) {
-    let array = map.get(svg.id);
+    let creasePatternArray = map.get(svg.id);
 
     let idx = (svg.getAttribute('index'));
     if (idx > 0) {
         idx--;
         svg.setAttribute('index', idx);
     }
-    if (idx >= 0 && array.length > 0) {
+    if (idx >= 0 && creasePatternArray.length > 0) {
         svg.innerHTML = "";
-        array[idx].drawCP();
+        creasePatternArray[idx].drawCreasePattern();
     }
 }
 
 function getNext(svg) {
-    let array = map.get(svg.id);
+    let creasePatternArray = map.get(svg.id);
     let idx = svg.getAttribute('index');
 
-    if (idx < array.length - 1) {
+    if (idx < creasePatternArray.length - 1) {
         idx++;
         svg.setAttribute('index', idx);
     }
-    if (idx >= 0 && array.length > 0) {
+    if (idx >= 0 && creasePatternArray.length > 0) {
         svg.innerHTML = "";
-        array[idx].drawCP();
+        creasePatternArray[idx].drawCreasePattern();
     }
 }
 

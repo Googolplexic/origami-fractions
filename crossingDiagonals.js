@@ -1,126 +1,126 @@
-function generateCrossingDiagonals(svg, size, n, d) {
-    [a, b] = crossingDiagonalsBinary(n, d);
-    a = a.split('').reverse().join('');
-    b = b.split('').reverse().join('');
-    const CP_Array = [];
-    let lPoint = crossingDiagonalsLeft(CP_Array, a, size, svg);
-    if (a !== b) {
-        let rPoint = crossingDiagonalsRight(CP_Array, b, lPoint, size, svg);
-        crossingDiagonalsDiagonals(CP_Array, lPoint, rPoint, size, svg);
+function generateCrossingDiagonals(svg, size, numerator, denominator) {
+    [leftBinary, rightBinary] = crossingDiagonalsBinary(numerator, denominator);
+    leftBinary = leftBinary.split('').reverse().join('');
+    rightBinary = rightBinary.split('').reverse().join('');
+    const creasePatternArray = [];
+    const lastLeftFoldY = crossingDiagonalsLeft(creasePatternArray, leftBinary, size, svg);
+    if (leftBinary !== rightBinary) {
+        const lastRightFoldY = crossingDiagonalsRight(creasePatternArray, rightBinary, lastLeftFoldY, size, svg);
+        crossingDiagonalsDiagonals(creasePatternArray, lastLeftFoldY, lastRightFoldY, size, svg);
     }
     else {
-        let newCP = new CP(size, svg);
-        newCP.createCrease([0, lPoint], [1, lPoint], 'E');
-        CP_Array.push(newCP);
+        let newCreasePattern = new CreasePattern(size, svg);
+        newCreasePattern.createCrease([0, lastLeftFoldY], [1, lastLeftFoldY], 'E');
+        creasePatternArray.push(newCreasePattern);
     }
-    return CP_Array;
+    return creasePatternArray;
 }
 
-function crossingDiagonalsLeft(arr, left, size, svg) {
-    let yPos = 1;
-    if (left === '1') { yPos = 0; }
-    for (let i = 0; i < left.length; i++) {
-        let oldYPos = yPos;
-        let newCP = new CP(size, svg);
-        x = left[i];
+function crossingDiagonalsLeft(creasePatternArray, leftBinary, size, svg) {
+    let currentY = 1;
+    if (leftBinary === '1') { currentY = 0; }
+    for (let i = 0; i < leftBinary.length; i++) {
+        let previousY = currentY;
+        let newCreasePattern = new CreasePattern(size, svg);
+        x = leftBinary[i];
 
         if (x === '0') {
-            yPos /= 2;
+            currentY /= 2;
         }
         else {
-            yPos = (1 + yPos) / 2;
+            currentY = (1 + currentY) / 2;
         }
 
-        newCP.createHorizontalPinch(yPos, 'left', 0.2);
-        if (oldYPos !== 1) { newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E'); }
-        newCP.createPoint([0, oldYPos]);
-        newCP.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCP.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
-        arr.push(newCP);
+        newCreasePattern.createHorizontalPinch(currentY, 'left', 0.2);
+        if (previousY !== 1) { newCreasePattern.createCrease([0, previousY], [0.2, previousY], 'E'); }
+        newCreasePattern.createPoint([0, previousY]);
+        newCreasePattern.createPoint([0, (x === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow((x === '0' ? 0 : 1), previousY, 'L');
+        creasePatternArray.push(newCreasePattern);
     }
-    return yPos;
+    return currentY;
 
 }
 
-function crossingDiagonalsRight(arr, right, lPos, size, svg) {
-    let yPos = 1;
-    if (right.length === 1) { yPos = 0; }
-    for (let i = 0; i < right.length; i++) {
-        let oldYPos = yPos;
-        let newCP = new CP(size, svg);
-        x = right[i];
+function crossingDiagonalsRight(creasePatternArray, rightBinary, lastLeftFoldY, size, svg) {
+    let currentY = 1;
+    if (rightBinary.length === 1) { currentY = 0; }
+    for (let i = 0; i < rightBinary.length; i++) {
+        let previousY = currentY;
+        let newCreasePattern = new CreasePattern(size, svg);
+        x = rightBinary[i];
 
         if (x === '0') {
-            yPos /= 2;
+            currentY /= 2;
         }
         else {
-            yPos = (1 + yPos) / 2;
+            currentY = (1 + currentY) / 2;
         }
 
-        newCP.createHorizontalPinch(yPos, 'right', 0.2);
-        if (lPos !== 1) { newCP.createCrease([0, lPos], [0.2, lPos], 'E'); }
-        if (oldYPos !== 1) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
-        newCP.createPoint([1, oldYPos]);
-        newCP.createPoint([1, (x === '0' ? 0 : 1)]);
-        newCP.createVerticalArrow(x === '0' ? 0 : 1, oldYPos, 'R');
-        arr.push(newCP);
+        newCreasePattern.createHorizontalPinch(currentY, 'rightBinary', 0.2);
+        if (lastLeftFoldY !== 1) { newCreasePattern.createCrease([0, lastLeftFoldY], [0.2, lastLeftFoldY], 'E'); }
+        if (previousY !== 1) { newCreasePattern.createCrease([1, previousY], [0.8, previousY], 'E'); }
+        newCreasePattern.createPoint([1, previousY]);
+        newCreasePattern.createPoint([1, (x === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow(x === '0' ? 0 : 1, previousY, 'R');
+        creasePatternArray.push(newCreasePattern);
     }
-    return yPos == 1 ? 0 : yPos;
+    return currentY == 1 ? 0 : currentY;
 
 }
 
-function crossingDiagonalsDiagonals(arr, lPos, rPos, size, svg) {
-    let newCP1 = new CP(size, svg);
-    if (lPos !== 1) { newCP1.createCrease([0, lPos], [0.2, lPos], 'E'); }
-    if (rPos !== 0) { newCP1.createCrease([1, rPos], [0.8, rPos], 'E'); };
-    newCP1.createCrease([0, lPos], [1, rPos], 'V', 'dashed');
-    newCP1.createPoint([0, lPos]);
-    newCP1.createPoint([1, rPos]);
-    arr.push(newCP1);
+function crossingDiagonalsDiagonals(creasePatternArray, lastLeftFoldY, lastRightFoldY, size, svg) {
+    let newCreasePattern1 = new CreasePattern(size, svg);
+    if (lastLeftFoldY !== 1) { newCreasePattern1.createCrease([0, lastLeftFoldY], [0.2, lastLeftFoldY], 'E'); }
+    if (lastRightFoldY !== 0) { newCreasePattern1.createCrease([1, lastRightFoldY], [0.8, lastRightFoldY], 'E'); };
+    newCreasePattern1.createCrease([0, lastLeftFoldY], [1, lastRightFoldY], 'V', 'dashed');
+    newCreasePattern1.createPoint([0, lastLeftFoldY]);
+    newCreasePattern1.createPoint([1, lastRightFoldY]);
+    creasePatternArray.push(newCreasePattern1);
 
-    let newCP2 = new CP(size, svg);
-    newCP2.createCrease([0, lPos], [1, rPos], 'E');
-    newCP2.createCrease([0, 0], [1, 1], 'V', 'dashed');
-    arr.push(newCP2);
+    let newCreasePattern2 = new CreasePattern(size, svg);
+    newCreasePattern2.createCrease([0, lastLeftFoldY], [1, lastRightFoldY], 'E');
+    newCreasePattern2.createCrease([0, 0], [1, 1], 'V', 'dashed');
+    creasePatternArray.push(newCreasePattern2);
 
-    let newCP3 = new CP(size, svg);
-    newCP3.createCrease([0, lPos], [1, rPos], 'E');
-    newCP3.createCornerDiagonal();
-    newCP3.createPoint(findIntersection([[0, lPos], [1, rPos]], [[0, 0], [1, 1]]));
-    arr.push(newCP3);
+    let newCreasePattern3 = new CreasePattern(size, svg);
+    newCreasePattern3.createCrease([0, lastLeftFoldY], [1, lastRightFoldY], 'E');
+    newCreasePattern3.createCornerDiagonal();
+    newCreasePattern3.createPoint(findIntersection([[0, lastLeftFoldY], [1, lastRightFoldY]], [[0, 0], [1, 1]]));
+    creasePatternArray.push(newCreasePattern3);
 }
 
 
 
 
-function crossingDiagonalsBinary(a, b) {
-    if (a / b === 0.5) {
+function crossingDiagonalsBinary(numerator, denominator) {
+    if (numerator / denominator === 0.5) {
         return ['0', '0'];
     }
-    let p = 1;
-    while (p < a || p < b - a) { p *= 2; }
+    let power = 1;
+    while (power < numerator || power < denominator - numerator) { power *= 2; }
 
-    let mBin, nBin;
-    let m = a;
-    let n = p + a - b;
-    let p_m = p;
-    let p_n = n === 0 ? 1 : p;
-    let mGCD = findGCD(m, p_m);
-    m /= mGCD;
-    p_m /= mGCD;
-    let nGCD = findGCD(n, p_n);
-    n /= nGCD;
-    p_n /= nGCD;
+    let leftBinary, rightBinary;
+    let left = numerator;
+    let right = power + numerator - denominator;
+    let leftPower = power;
+    let rightPower = right === 0 ? 1 : power;
+    const leftGCD = findGCD(left, leftPower);
+    left /= leftGCD;
+    leftPower /= leftGCD;
+    const rightGCD = findGCD(right, rightPower);
+    right /= rightGCD;
+    rightPower /= rightGCD;
 
-    mBin = p_m !== 1 ? m.toString(2).padStart(Math.log2(p_m), '0') : "";
-    if (mBin.length > 1) {
-        mBin = mBin.slice(0, -1) + '0';
+    leftBinary = leftPower !== 1 ? left.toString(2).padStart(Math.log2(leftPower), '0') : "";
+    if (leftBinary.length > 1) {
+        leftBinary = leftBinary.slice(0, -1) + '0';
     }
-    nBin = n !== 0 ? n.toString(2).padStart(Math.log2(p_n), '0') : "";
+    rightBinary = right !== 0 ? right.toString(2).padStart(Math.log2(rightPower), '0') : "";
 
-    if (nBin.length > 1) {
-        nBin = nBin.slice(0, -1) + '0';
+    if (rightBinary.length > 1) {
+        rightBinary = rightBinary.slice(0, -1) + '0';
     }
 
-    return [mBin, nBin];
+    return [leftBinary, rightBinary];
 }

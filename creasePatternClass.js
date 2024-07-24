@@ -1,4 +1,4 @@
-class CP {
+class CreasePattern {
     #ns = 'http://www.w3.org/2000/svg';
     #square;
     #svg;
@@ -9,7 +9,7 @@ class CP {
         this.#square = this.#createCentredSquare(size);
     }
 
-    drawCP() {
+    drawCreasePattern() {
         this.#shapeArray.push(this.#square);
         this.#shapeArray.sort(this.#sort);
         for (const shape of this.#shapeArray) {

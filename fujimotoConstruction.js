@@ -3,20 +3,20 @@ function generateFujimotoConstruction(svg, size, n, d) {
     x = x.split('').reverse().join('');
     a = a.split('').reverse().join('');
 
-    const CP_Array = [];
-    const [lPoint, loc] = fujimotoLeft(CP_Array, x, size, svg);
+    const CreasePattern_Array = [];
+    const [lPoint, loc] = fujimotoLeft(CreasePattern_Array, x, size, svg);
     if (a !== '') {
-        const firstPoint = foldOnLine(CP_Array, lPoint, loc, size, svg);
-        const [rPoint, l1, l2] = foldSecond(CP_Array, firstPoint, size, svg);
-        fujimotoRight(CP_Array, rPoint, a, l1, l2, size, svg);
+        const firstPoint = foldOnLine(CreasePattern_Array, lPoint, loc, size, svg);
+        const [rPoint, l1, l2] = foldSecond(CreasePattern_Array, firstPoint, size, svg);
+        fujimotoRight(CreasePattern_Array, rPoint, a, l1, l2, size, svg);
     }
     else {
-        let newCP = new CP(size, svg);
-        newCP.createCrease([0, lPoint], [1, lPoint], 'E');
-        CP_Array.push(newCP);
+        let newCreasePattern = new CreasePattern(size, svg);
+        newCreasePattern.createCrease([0, lPoint], [1, lPoint], 'E');
+        CreasePattern_Array.push(newCreasePattern);
     }
 
-    return CP_Array;
+    return CreasePattern_Array;
 }
 
 
@@ -27,7 +27,7 @@ function fujimotoLeft(arr, left, size, svg) {
     if (left.length === 1) { yPos = 0; }
     for (let i = 0; i < left.length; i++) {
         let oldYPos = yPos;
-        let newCP = new CP(size, svg);
+        let newCreasePattern = new CreasePattern(size, svg);
         x = left[i];
 
         if (x === '0') {
@@ -43,50 +43,50 @@ function fujimotoLeft(arr, left, size, svg) {
             const c = yPos ** 2;
             d = quadraticEquation(a, b, c)[1];
 
-            newCP.createHorizontalPinch(yPos, 'left', (d <= 0.8) ? d + 0.2 : 1);
+            newCreasePattern.createHorizontalPinch(yPos, 'left', (d <= 0.8) ? d + 0.2 : 1);
         }
-        else { newCP.createHorizontalPinch(yPos, 'left', 0.2); };
+        else { newCreasePattern.createHorizontalPinch(yPos, 'left', 0.2); };
 
-        newCP.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
+        newCreasePattern.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
 
-        newCP.createPoint([0, oldYPos]);
-        newCP.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCP.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
-        arr.push(newCP);
+        newCreasePattern.createPoint([0, oldYPos]);
+        newCreasePattern.createPoint([0, (x === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
+        arr.push(newCreasePattern);
     }
     return [yPos, d];
 
 }
 
 function foldOnLine(arr, yPoint, loc, size, svg) {
-    let newCP = new CP(size, svg);
+    let newCreasePattern = new CreasePattern(size, svg);
 
     const point = (yPoint - loc) / (1 - loc);
-    newCP.createCrease([0, yPoint], [(loc <= 0.8) ? loc + 0.2 : 1, yPoint], 'E');
+    newCreasePattern.createCrease([0, yPoint], [(loc <= 0.8) ? loc + 0.2 : 1, yPoint], 'E');
 
-    newCP.createCrease([point, 1], [1, 0], 'V', 'dashed');
-    newCP.createPoint([1, 1]);
-    newCP.createPoint([loc, yPoint]);
-    newCP.createArrow([1, 1], [loc, yPoint], [-0.05, -0.03], [0.02, 0.05], 'R');
-    arr.push(newCP);
+    newCreasePattern.createCrease([point, 1], [1, 0], 'V', 'dashed');
+    newCreasePattern.createPoint([1, 1]);
+    newCreasePattern.createPoint([loc, yPoint]);
+    newCreasePattern.createArrow([1, 1], [loc, yPoint], [-0.05, -0.03], [0.02, 0.05], 'R');
+    arr.push(newCreasePattern);
     return point;
 }
 
 
 function foldSecond(arr, point, size, svg) {
-    let newCP = new CP(size, svg);
-    newCP.createCrease([point, 1], [1, 0], 'E');
+    let newCreasePattern = new CreasePattern(size, svg);
+    newCreasePattern.createCrease([point, 1], [1, 0], 'E');
     const slope = 1 - point;
     const midPoint = (1 + point) / 2;
     const rPoint = slope * ((1 - point) / 2) + 0.5;
 
     x1 = midPoint - 0.1 / Math.sqrt(1 + slope ** 2);
     y1 = 0.5 - 0.1 * slope / Math.sqrt(1 + slope ** 2);
-    newCP.createCrease([x1, y1], [1, rPoint], 'V', 'dashed');
-    newCP.createPoint([1, 0]);
-    newCP.createPoint([point, 1]);
-    newCP.createArrow([1, 0], [point, 1], [-0.05, 0.02], [0, -0.05], 'L');
-    arr.push(newCP);
+    newCreasePattern.createCrease([x1, y1], [1, rPoint], 'V', 'dashed');
+    newCreasePattern.createPoint([1, 0]);
+    newCreasePattern.createPoint([point, 1]);
+    newCreasePattern.createArrow([1, 0], [point, 1], [-0.05, 0.02], [0, -0.05], 'L');
+    arr.push(newCreasePattern);
     return [rPoint, [x1, y1], [1, rPoint]];
 }
 
@@ -95,7 +95,7 @@ function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
 
     for (let i = 0; i < right.length; i++) {
         let oldYPos = yPos;
-        let newCP = new CP(size, svg);
+        let newCreasePattern = new CreasePattern(size, svg);
         x = right[i];
 
         if (x === '0') {
@@ -104,19 +104,19 @@ function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
         else {
             yPos = (rPoint + yPos) / 2;
         }
-        if (i !== 0) { newCP.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
+        if (i !== 0) { newCreasePattern.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
     
-        newCP.createCrease(l1, l2, 'E');
-        newCP.createHorizontalPinch(yPos, 'right', 0.2);
-        newCP.createPoint([1, oldYPos]);
-        newCP.createPoint([1, (x === '0' ? 0 : rPoint)]);
-        newCP.createVerticalArrow(x === '0' ? 0 : rPoint, oldYPos, 'R');
-        arr.push(newCP);
+        newCreasePattern.createCrease(l1, l2, 'E');
+        newCreasePattern.createHorizontalPinch(yPos, 'right', 0.2);
+        newCreasePattern.createPoint([1, oldYPos]);
+        newCreasePattern.createPoint([1, (x === '0' ? 0 : rPoint)]);
+        newCreasePattern.createVerticalArrow(x === '0' ? 0 : rPoint, oldYPos, 'R');
+        arr.push(newCreasePattern);
     }
-    let lastCP = new CP(size, svg);
-    lastCP.createCrease([0, yPos], [1, yPos], 'E');
+    let lastCreasePattern = new CreasePattern(size, svg);
+    lastCreasePattern.createCrease([0, yPos], [1, yPos], 'E');
 
-    arr.push(lastCP);
+    arr.push(lastCreasePattern);
 
 }
 

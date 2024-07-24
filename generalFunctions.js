@@ -1,40 +1,39 @@
-function findIntersection(a, b) {
-    const [[x1, y1], [x2, y2]] = a;
-    const [[x3, y3], [x4, y4]] = b;
-    const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-    const n_A = (x1 * y2 - y1 * x2);
-    const n_B = (x3 * y4 - y3 * x4);
-    const x = (n_A * (x3 - x4) - (x1 - x2) * n_B) / d;
-    const y = (n_A * (y3 - y4) - (y1 - y2) * n_B) / d;
+function findIntersection(lineA, lineB) {
+    const [[x1, y1], [x2, y2]] = lineA;
+    const [[x3, y3], [x4, y4]] = lineB;
+    const constant = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    const constantA = (x1 * y2 - y1 * x2);
+    const constantB = (x3 * y4 - y3 * x4);
+    const x = (constantA * (x3 - x4) - (x1 - x2) * constantB) / constant;
+    const y = (constantA * (y3 - y4) - (y1 - y2) * constantB) / constant;
     return [x, y];
 }
 
-function findGCD(a, b) {
-    while (b !== 0) {
-
-        let temp = b;
-        b = a % b;
-        a = temp;
+function findGCD(numerator, denominator) {
+    while (denominator) {
+        let temp = denominator;
+        denominator = numerator % denominator;
+        numerator = temp;
     }
-    return a;
+    return numerator;
 }
 
-function simplifyFraction(n, d, notice) {
-    let simplified = false;
-    let gcd = findGCD(n, d);
+function simplifyFraction(numerator, denominator, notice) {
+    let changed = false;
+    let gcd = findGCD(numerator, denominator);
     if (gcd !== 1) {
-        simplified = true;
-        n /= gcd;
-        d /= gcd;
+        changed = true;
+        numerator /= gcd;
+        denominator /= gcd;
     }
-    if (d - n < n) {
-        n = d - n;
-        simplified = true;
+    if (denominator - numerator < numerator) {
+        numerator = denominator - numerator;
+        changed = true;
     }
-    if (simplified === true) {
-        notice.textContent = "Fraction changed to " + n + "/" + d;
+    if (changed) {
+        notice.textContent = "Fraction changed to " + numerator + "/" + denominator;
         notice.style.display = 'block';
     }
     else { notice.textContent = ""; notice.style.display = 'none'; }
-    return [n, d];
+    return [numerator, denominator];
 }
