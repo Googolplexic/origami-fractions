@@ -22,9 +22,9 @@ function crossingDiagonalsLeft(creasePatternArray, leftBinary, size, svg) {
     for (let i = 0; i < leftBinary.length; i++) {
         let previousY = currentY;
         let newCreasePattern = new CreasePattern(size, svg);
-        x = leftBinary[i];
+        currentFoldDirection = leftBinary[i];
 
-        if (x === '0') {
+        if (currentFoldDirection === '0') {
             currentY /= 2;
         }
         else {
@@ -34,8 +34,8 @@ function crossingDiagonalsLeft(creasePatternArray, leftBinary, size, svg) {
         newCreasePattern.createHorizontalPinch(currentY, 'left', 0.2);
         if (previousY !== 1) { newCreasePattern.createCrease([0, previousY], [0.2, previousY], 'E'); }
         newCreasePattern.createPoint([0, previousY]);
-        newCreasePattern.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCreasePattern.createVerticalArrow((x === '0' ? 0 : 1), previousY, 'L');
+        newCreasePattern.createPoint([0, (currentFoldDirection === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow((currentFoldDirection === '0' ? 0 : 1), previousY, 'L');
         creasePatternArray.push(newCreasePattern);
     }
     return currentY;
@@ -48,9 +48,9 @@ function crossingDiagonalsRight(creasePatternArray, rightBinary, lastLeftFoldY, 
     for (let i = 0; i < rightBinary.length; i++) {
         let previousY = currentY;
         let newCreasePattern = new CreasePattern(size, svg);
-        x = rightBinary[i];
+        currentFoldDirection = rightBinary[i];
 
-        if (x === '0') {
+        if (currentFoldDirection === '0') {
             currentY /= 2;
         }
         else {
@@ -61,8 +61,8 @@ function crossingDiagonalsRight(creasePatternArray, rightBinary, lastLeftFoldY, 
         if (lastLeftFoldY !== 1) { newCreasePattern.createCrease([0, lastLeftFoldY], [0.2, lastLeftFoldY], 'E'); }
         if (previousY !== 1) { newCreasePattern.createCrease([1, previousY], [0.8, previousY], 'E'); }
         newCreasePattern.createPoint([1, previousY]);
-        newCreasePattern.createPoint([1, (x === '0' ? 0 : 1)]);
-        newCreasePattern.createVerticalArrow(x === '0' ? 0 : 1, previousY, 'R');
+        newCreasePattern.createPoint([1, (currentFoldDirection === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow(currentFoldDirection === '0' ? 0 : 1, previousY, 'R');
         creasePatternArray.push(newCreasePattern);
     }
     return currentY == 1 ? 0 : currentY;

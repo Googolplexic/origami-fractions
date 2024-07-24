@@ -1,122 +1,122 @@
-function generateFujimotoConstruction(svg, size, n, d) {
-    [x, a] = fujimotoBinary(n, d);
-    x = x.split('').reverse().join('');
-    a = a.split('').reverse().join('');
+function generateFujimotoConstruction(svg, size, numerator, denominator) {
+    [leftBinary, rightBinary] = fujimotoBinary(numerator, denominator);
+    leftBinary = leftBinary.split('').reverse().join('');
+    rightBinary = rightBinary.split('').reverse().join('');
 
-    const CreasePattern_Array = [];
-    const [lPoint, loc] = fujimotoLeft(CreasePattern_Array, x, size, svg);
-    if (a !== '') {
-        const firstPoint = foldOnLine(CreasePattern_Array, lPoint, loc, size, svg);
-        const [rPoint, l1, l2] = foldSecond(CreasePattern_Array, firstPoint, size, svg);
-        fujimotoRight(CreasePattern_Array, rPoint, a, l1, l2, size, svg);
+    const creasePatternArray = [];
+    const [lastLeftFoldY, pointToFoldToX] = fujimotoLeft(creasePatternArray, leftBinary, size, svg);
+    if (rightBinary !== '') {
+        const firstPoint = foldOnLine(creasePatternArray, lastLeftFoldY, pointToFoldToX, size, svg);
+        const [initialRightFoldY, linePoint1, linePoint2] = foldSecond(creasePatternArray, firstPoint, size, svg);
+        fujimotoRight(creasePatternArray, initialRightFoldY, rightBinary, linePoint1, linePoint2, size, svg);
     }
     else {
         let newCreasePattern = new CreasePattern(size, svg);
-        newCreasePattern.createCrease([0, lPoint], [1, lPoint], 'E');
-        CreasePattern_Array.push(newCreasePattern);
+        newCreasePattern.createCrease([0, lastLeftFoldY], [1, lastLeftFoldY], 'E');
+        creasePatternArray.push(newCreasePattern);
     }
 
-    return CreasePattern_Array;
+    return creasePatternArray;
 }
 
 
-function fujimotoLeft(arr, left, size, svg) {
+function fujimotoLeft(creasePatternArray, leftBinary, size, svg) {
 
-    let yPos = 1;
-    let d;
-    if (left.length === 1) { yPos = 0; }
-    for (let i = 0; i < left.length; i++) {
-        let oldYPos = yPos;
+    let currentY = 1;
+    let pointToFoldToX;
+    if (leftBinary.length === 1) { currentY = 0; }
+    for (let i = 0; i < leftBinary.length; i++) {
+        let previousY = currentY;
         let newCreasePattern = new CreasePattern(size, svg);
-        x = left[i];
+        currentFoldDirection = leftBinary[i];
 
-        if (x === '0') {
-            yPos /= 2;
+        if (currentFoldDirection === '0') {
+            currentY /= 2;
         }
         else {
-            yPos = (1 + yPos) / 2;
+            currentY = (1 + currentY) / 2;
         }
 
-        if (i + 1 === left.length) {
+        if (i + 1 === leftBinary.length) {
             const a = 1;
             const b = -2;
-            const c = yPos ** 2;
-            d = quadraticEquation(a, b, c)[1];
+            const c = currentY ** 2;
+            pointToFoldToX = quadraticEquation(a, b, c)[1];
 
-            newCreasePattern.createHorizontalPinch(yPos, 'left', (d <= 0.8) ? d + 0.2 : 1);
+            newCreasePattern.createHorizontalPinch(currentY, 'leftBinary', (pointToFoldToX <= 0.8) ? pointToFoldToX + 0.2 : 1);
         }
-        else { newCreasePattern.createHorizontalPinch(yPos, 'left', 0.2); };
+        else { newCreasePattern.createHorizontalPinch(currentY, 'leftBinary', 0.2); };
 
-        newCreasePattern.createCrease([0, oldYPos], [0.2, oldYPos], 'E');
+        newCreasePattern.createCrease([0, previousY], [0.2, previousY], 'E');
 
-        newCreasePattern.createPoint([0, oldYPos]);
-        newCreasePattern.createPoint([0, (x === '0' ? 0 : 1)]);
-        newCreasePattern.createVerticalArrow((x === '0' ? 0 : 1), oldYPos, 'L');
-        arr.push(newCreasePattern);
+        newCreasePattern.createPoint([0, previousY]);
+        newCreasePattern.createPoint([0, (currentFoldDirection === '0' ? 0 : 1)]);
+        newCreasePattern.createVerticalArrow((currentFoldDirection === '0' ? 0 : 1), previousY, 'L');
+        creasePatternArray.push(newCreasePattern);
     }
-    return [yPos, d];
+    return [currentY, pointToFoldToX];
 
 }
 
-function foldOnLine(arr, yPoint, loc, size, svg) {
+function foldOnLine(creasePatternArray, lastLeftFoldY, pointToFoldToX, size, svg) {
     let newCreasePattern = new CreasePattern(size, svg);
 
-    const point = (yPoint - loc) / (1 - loc);
-    newCreasePattern.createCrease([0, yPoint], [(loc <= 0.8) ? loc + 0.2 : 1, yPoint], 'E');
+    const topFoldX = (lastLeftFoldY - pointToFoldToX) / (1 - pointToFoldToX);
+    newCreasePattern.createCrease([0, lastLeftFoldY], [(pointToFoldToX <= 0.8) ? pointToFoldToX + 0.2 : 1, lastLeftFoldY], 'E');
 
-    newCreasePattern.createCrease([point, 1], [1, 0], 'V', 'dashed');
+    newCreasePattern.createCrease([topFoldX, 1], [1, 0], 'V', 'dashed');
     newCreasePattern.createPoint([1, 1]);
-    newCreasePattern.createPoint([loc, yPoint]);
-    newCreasePattern.createArrow([1, 1], [loc, yPoint], [-0.05, -0.03], [0.02, 0.05], 'R');
-    arr.push(newCreasePattern);
-    return point;
+    newCreasePattern.createPoint([pointToFoldToX, lastLeftFoldY]);
+    newCreasePattern.createArrow([1, 1], [pointToFoldToX, lastLeftFoldY], [-0.05, -0.03], [0.02, 0.05], 'R');
+    creasePatternArray.push(newCreasePattern);
+    return topFoldX;
 }
 
 
-function foldSecond(arr, point, size, svg) {
+function foldSecond(creasePatternArray, topFoldX, size, svg) {
     let newCreasePattern = new CreasePattern(size, svg);
-    newCreasePattern.createCrease([point, 1], [1, 0], 'E');
-    const slope = 1 - point;
-    const midPoint = (1 + point) / 2;
-    const rPoint = slope * ((1 - point) / 2) + 0.5;
+    newCreasePattern.createCrease([topFoldX, 1], [1, 0], 'E');
+    const newFoldSlope = 1 - topFoldX;
+    const oldFoldMidpoint = (1 + topFoldX) / 2;
+    const initialRightFoldY = newFoldSlope * ((1 - topFoldX) / 2) + 0.5;
 
-    x1 = midPoint - 0.1 / Math.sqrt(1 + slope ** 2);
-    y1 = 0.5 - 0.1 * slope / Math.sqrt(1 + slope ** 2);
-    newCreasePattern.createCrease([x1, y1], [1, rPoint], 'V', 'dashed');
+    pinchFoldX = oldFoldMidpoint - 0.1 / Math.sqrt(1 + newFoldSlope ** 2);
+    pinchFoldY = 0.5 - 0.1 * newFoldSlope / Math.sqrt(1 + newFoldSlope ** 2);
+    newCreasePattern.createCrease([pinchFoldX, pinchFoldY], [1, initialRightFoldY], 'V', 'dashed');
     newCreasePattern.createPoint([1, 0]);
-    newCreasePattern.createPoint([point, 1]);
-    newCreasePattern.createArrow([1, 0], [point, 1], [-0.05, 0.02], [0, -0.05], 'L');
-    arr.push(newCreasePattern);
-    return [rPoint, [x1, y1], [1, rPoint]];
+    newCreasePattern.createPoint([topFoldX, 1]);
+    newCreasePattern.createArrow([1, 0], [topFoldX, 1], [-0.05, 0.02], [0, -0.05], 'L');
+    creasePatternArray.push(newCreasePattern);
+    return [initialRightFoldY, [pinchFoldX, pinchFoldY], [1, initialRightFoldY]];
 }
 
-function fujimotoRight(arr, rPoint, right, l1, l2, size, svg) {
-    let yPos = rPoint;
+function fujimotoRight(creasePatternArray, initialRightFoldY, rightBinary, linePoint1, linePoint2, size, svg) {
+    let currentY = initialRightFoldY;
 
-    for (let i = 0; i < right.length; i++) {
-        let oldYPos = yPos;
+    for (let i = 0; i < rightBinary.length; i++) {
+        let previousY = currentY;
         let newCreasePattern = new CreasePattern(size, svg);
-        x = right[i];
+        currentFoldDirection = rightBinary[i];
 
-        if (x === '0') {
-            yPos /= 2;
+        if (currentFoldDirection === '0') {
+            currentY /= 2;
         }
         else {
-            yPos = (rPoint + yPos) / 2;
+            currentY = (initialRightFoldY + currentY) / 2;
         }
-        if (i !== 0) { newCreasePattern.createCrease([1, oldYPos], [0.8, oldYPos], 'E'); }
-    
-        newCreasePattern.createCrease(l1, l2, 'E');
-        newCreasePattern.createHorizontalPinch(yPos, 'right', 0.2);
-        newCreasePattern.createPoint([1, oldYPos]);
-        newCreasePattern.createPoint([1, (x === '0' ? 0 : rPoint)]);
-        newCreasePattern.createVerticalArrow(x === '0' ? 0 : rPoint, oldYPos, 'R');
-        arr.push(newCreasePattern);
+        if (i !== 0) { newCreasePattern.createCrease([1, previousY], [0.8, previousY], 'E'); }
+
+        newCreasePattern.createCrease(linePoint1, linePoint2, 'E');
+        newCreasePattern.createHorizontalPinch(currentY, 'rightBinary', 0.2);
+        newCreasePattern.createPoint([1, previousY]);
+        newCreasePattern.createPoint([1, (currentFoldDirection === '0' ? 0 : initialRightFoldY)]);
+        newCreasePattern.createVerticalArrow(currentFoldDirection === '0' ? 0 : initialRightFoldY, previousY, 'R');
+        creasePatternArray.push(newCreasePattern);
     }
     let lastCreasePattern = new CreasePattern(size, svg);
-    lastCreasePattern.createCrease([0, yPos], [1, yPos], 'E');
+    lastCreasePattern.createCrease([0, currentY], [1, currentY], 'E');
 
-    arr.push(lastCreasePattern);
+    creasePatternArray.push(lastCreasePattern);
 
 }
 
@@ -125,40 +125,39 @@ function quadraticEquation(a, b, c) {
     const determinant = b ** 2 - 4 * a * c;
     if (determinant < 0) { return [NaN, NaN]; }
     return [(-b + Math.sqrt(determinant)) / 2 * a, (-b - Math.sqrt(determinant)) / 2 * a];
-
-
 }
-function fujimotoBinary(n, d) {
-    let p = 1;
-    while (p < d) { p *= 2; }
-    if (p > 1) { p /= 2; }
 
-    let xBin, aBin;
-    let x = parseInt(d - p);
-    if (x === p) {
-        let nBin = p !== 1 ? n.toString(2).padStart(Math.log2(p) + 1, '0') : '0';
-        nBin = nBin.slice(0, -1) + '0';
+function fujimotoBinary(numerator, denominator) {
+    let power = 1;
+    while (power < denominator) { power *= 2; }
+    if (power > 1) { power /= 2; }
 
-        return [nBin, ''];
+    let leftBinary, rightBinary;
+    let left = parseInt(denominator - power);
+    if (left === power) {
+        let nBinary = power !== 1 ? numerator.toString(2).padStart(Math.log2(power) + 1, '0') : '0';
+        nBinary = nBinary.slice(0, -1) + '0';
+
+        return [nBinary, ''];
 
     }
-    let a = parseInt(n);
-    let p_x = p;
-    let p_a = p;
+    let right = parseInt(numerator);
+    let leftPower = power;
+    let rightPower = power;
 
-    let xGCD = findGCD(x, p_x);
+    let leftGCD = findGCD(left, leftPower);
 
-    x /= xGCD;
-    p_x /= xGCD;
-    let aGCD = findGCD(a, p_a);
-    a /= aGCD;
-    p_a /= aGCD;
+    left /= leftGCD;
+    leftPower /= leftGCD;
+    let rightGCD = findGCD(right, rightPower);
+    right /= rightGCD;
+    rightPower /= rightGCD;
 
-    xBin = p_x !== 1 ? x.toString(2).padStart(Math.log2(p_x), '0') : "";
-    if (xBin.length > 1) {
-        xBin = xBin.slice(0, -1) + '0';
+    leftBinary = leftPower !== 1 ? left.toString(2).padStart(Math.log2(leftPower), '0') : "";
+    if (leftBinary.length > 1) {
+        leftBinary = leftBinary.slice(0, -1) + '0';
     }
-    aBin = p_a !== 1 ? a.toString(2).padStart(Math.log2(p_a), '0').slice(0, -1) + '0' : "";
+    rightBinary = rightPower !== 1 ? right.toString(2).padStart(Math.log2(rightPower), '0').slice(0, -1) + '0' : "";
 
-    return [xBin, aBin];
+    return [leftBinary, rightBinary];
 }
