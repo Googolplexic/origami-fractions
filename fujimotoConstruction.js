@@ -24,7 +24,7 @@ function fujimotoLeft(creasePatternArray, leftBinary, size, svg) {
 
     let currentY = 1;
     let pointToFoldToX;
-    if (leftBinary.length === 1) { currentY = 0; }
+    if (leftBinary === "1") { currentY = 0; }
     for (let i = 0; i < leftBinary.length; i++) {
         let previousY = currentY;
         let newCreasePattern = new CreasePattern(size, svg);
@@ -43,9 +43,9 @@ function fujimotoLeft(creasePatternArray, leftBinary, size, svg) {
             const c = currentY ** 2;
             pointToFoldToX = quadraticEquation(a, b, c)[1];
 
-            newCreasePattern.createHorizontalPinch(currentY, 'leftBinary', (pointToFoldToX <= 0.8) ? pointToFoldToX + 0.2 : 1);
+            newCreasePattern.createHorizontalPinch(currentY, 'left', (pointToFoldToX <= 0.8) ? pointToFoldToX + 0.2 : 1);
         }
-        else { newCreasePattern.createHorizontalPinch(currentY, 'leftBinary', 0.2); };
+        else { newCreasePattern.createHorizontalPinch(currentY, 'left', 0.2); };
 
         newCreasePattern.createCrease([0, previousY], [0.2, previousY], 'E');
 
@@ -158,6 +158,5 @@ function fujimotoBinary(numerator, denominator) {
         leftBinary = leftBinary.slice(0, -1) + '0';
     }
     rightBinary = rightPower !== 1 ? right.toString(2).padStart(Math.log2(rightPower), '0').slice(0, -1) + '0' : "";
-
     return [leftBinary, rightBinary];
 }
