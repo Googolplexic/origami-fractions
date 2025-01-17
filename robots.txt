@@ -1,0 +1,4 @@
+
+User-agent: *
+Allow: /
+Sitemap: https://origamifractions.colemanlai.com/sitemap.xml
